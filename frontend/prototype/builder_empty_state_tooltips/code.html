@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+
+<html class="light" lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SecureID V2 - Document Builder</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "background": "#f8f9ff",
+                        "on-error": "#ffffff",
+                        "tertiary": "#35445a",
+                        "secondary-fixed-dim": "#3ce36a",
+                        "primary-container": "#0052cc",
+                        "on-primary-container": "#c4d2ff",
+                        "surface-container-high": "#dee9fc",
+                        "secondary-container": "#5cfd80",
+                        "tertiary-fixed-dim": "#b7c8e1",
+                        "primary": "#003d9b",
+                        "on-secondary-fixed-variant": "#00531e",
+                        "on-primary-fixed": "#001848",
+                        "inverse-surface": "#26313f",
+                        "primary-fixed": "#dae2ff",
+                        "surface-bright": "#f8f9ff",
+                        "tertiary-fixed": "#d3e4fe",
+                        "on-surface": "#111c2a",
+                        "on-tertiary-fixed": "#0b1c30",
+                        "on-error-container": "#93000a",
+                        "secondary-fixed": "#69ff87",
+                        "on-primary-fixed-variant": "#0040a2",
+                        "surface-container": "#e5eeff",
+                        "primary-fixed-dim": "#b2c5ff",
+                        "inverse-primary": "#b2c5ff",
+                        "tertiary-container": "#4c5c72",
+                        "on-primary": "#ffffff",
+                        "on-surface-variant": "#434654",
+                        "on-tertiary-fixed-variant": "#38485d",
+                        "outline-variant": "#c3c6d6",
+                        "outline": "#737685",
+                        "surface-container-low": "#eff4ff",
+                        "secondary": "#006e2a",
+                        "error": "#ba1a1a",
+                        "on-secondary-container": "#00732c",
+                        "surface": "#f8f9ff",
+                        "on-secondary-fixed": "#002108",
+                        "surface-container-highest": "#d8e3f6",
+                        "surface-variant": "#d8e3f6",
+                        "surface-container-lowest": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-tertiary": "#ffffff",
+                        "inverse-on-surface": "#eaf1ff",
+                        "surface-tint": "#0c56d0",
+                        "on-background": "#111c2a",
+                        "on-tertiary-container": "#c4d4ee",
+                        "on-secondary": "#ffffff",
+                        "surface-dim": "#cfdbee"
+                    },
+                    fontFamily: {
+                        "headline": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .premium-shadow {
+            box-shadow: 0px 4px 20px rgba(17, 28, 42, 0.06);
+        }
+        .builder-canvas {
+            background-image: 
+                radial-gradient(#dee9fc 0.5px, transparent 0.5px), 
+                radial-gradient(#dee9fc 0.5px, #f8f9ff 0.5px);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+        }
+    </style>
+</head>
+<body class="bg-background font-body text-on-surface antialiased overflow-hidden">
+<!-- TopNavBar (Shared Component) -->
+<header class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-sm flex items-center justify-between px-6 h-16 w-full">
+<div class="flex items-center gap-4">
+<span class="text-xl font-bold text-blue-700 dark:text-blue-400 tracking-tight">SecureID V2</span>
+<div class="h-6 w-[1px] bg-outline-variant/30 mx-2"></div>
+<span class="text-sm font-medium text-slate-600">Draft Kontrak Kerjasama.pdf</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 rounded-lg p-1">
+<button class="p-2 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors rounded text-slate-600">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors rounded text-slate-600">
+<span class="material-symbols-outlined">help</span>
+</button>
+</div>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-lg font-semibold text-sm hover:opacity-90 transition-all duration-300 shadow-sm">
+                Next Step
+            </button>
+</div>
+</header>
+<div class="flex h-screen pt-16">
+<!-- Sidebar Panels (Left) -->
+<aside class="w-72 bg-surface-container-lowest border-r border-outline-variant/20 flex flex-col z-40">
+<div class="p-6">
+<h3 class="text-xs font-bold uppercase tracking-widest text-outline mb-6">Field Elements</h3>
+<div class="space-y-3">
+<!-- Tooltip Container (Interactive State Preview) -->
+<div class="relative group">
+<div class="flex items-center gap-3 p-4 bg-surface-container-low rounded-xl border border-transparent hover:border-primary-container cursor-grab transition-all duration-200">
+<span class="material-symbols-outlined text-primary-container" style="font-variation-settings: 'FILL' 1;">history_edu</span>
+<span class="text-sm font-semibold">Tanda Tangan</span>
+</div>
+<!-- Tooltip Bubble -->
+<div class="absolute left-full ml-4 top-1/2 -translate-y-1/2 z-50 w-64 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+<div class="relative bg-inverse-surface text-inverse-on-surface text-sm p-3 rounded-lg premium-shadow">
+<div class="absolute left-0 top-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-inverse-surface rotate-45"></div>
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-blue-400 text-lg">info</span>
+<p class="leading-relaxed">Drag ke posisi yang diinginkan di PDF</p>
+</div>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-3 p-4 bg-surface-container-low rounded-xl border border-transparent hover:border-primary-container cursor-grab transition-all duration-200">
+<span class="material-symbols-outlined text-outline">calendar_today</span>
+<span class="text-sm font-semibold">Tanggal</span>
+</div>
+<div class="flex items-center gap-3 p-4 bg-surface-container-low rounded-xl border border-transparent hover:border-primary-container cursor-grab transition-all duration-200">
+<span class="material-symbols-outlined text-outline">text_fields</span>
+<span class="text-sm font-semibold">Teks Bebas</span>
+</div>
+<div class="flex items-center gap-3 p-4 bg-surface-container-low rounded-xl border border-transparent hover:border-primary-container cursor-grab transition-all duration-200">
+<span class="material-symbols-outlined text-outline">check_box</span>
+<span class="text-sm font-semibold">Checkbox</span>
+</div>
+</div>
+</div>
+<div class="mt-auto p-6 border-t border-outline-variant/20">
+<div class="bg-primary-fixed p-4 rounded-xl">
+<p class="text-xs font-bold text-on-primary-fixed-variant uppercase tracking-wider mb-2">Pro Tip</p>
+<p class="text-xs leading-relaxed text-on-primary-fixed opacity-80">Anda dapat menduplikat field dengan menahan tombol ALT saat menarik elemen.</p>
+</div>
+</div>
+</aside>
+<!-- Main Builder Canvas (Center) -->
+<main class="flex-1 overflow-auto builder-canvas relative p-12 flex justify-center items-start">
+<!-- Document Paper Representation -->
+<div class="w-[800px] min-h-[1100px] bg-white rounded-sm shadow-2xl relative overflow-hidden flex flex-col items-center justify-center p-20">
+<!-- Empty State (Section 1) -->
+<div class="flex flex-col items-center max-w-sm text-center">
+<div class="w-64 h-64 mb-8 relative">
+<!-- Illustration Placeholder -->
+<div class="absolute inset-0 bg-primary-container/5 rounded-full scale-110"></div>
+<img alt="Abstract digital minimalist illustration of a blank document and floating elements" class="w-full h-full object-contain mix-blend-multiply opacity-80" data-alt="abstract digital art showing a minimalist floating paper with 3D blue geometric shapes suggesting missing pieces or data" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCspNR_GOsWW6HbsidfMM9KqiRa7zVh0bbCUSo8E9NaJILTqSlI1IvsAD42l3BLqUdZEErJfvRRRHiQptXDxZlWK5V23zWFUho-MWhm-3g3mP1ZJ6WO7dd2yxOtcmQUx1FS7d0uTM30nBY6O8YNNrBeQRAoVU55B4Qb3ptAhhT4SOM2yf53-x08di_zTpwZ970EZT0vXgLsB96oMJh2lxN2NYXIqtweFbiaIZjrVYjFr2KvJ2qo2z1yF1GhjJjF_668ZlNTcT6vzA9C"/>
+<!-- Floating Decorative Icons -->
+<div class="absolute -top-4 -right-4 bg-white p-3 rounded-xl premium-shadow animate-bounce">
+<span class="material-symbols-outlined text-primary-container">touch_app</span>
+</div>
+<div class="absolute bottom-4 -left-8 bg-white p-2 rounded-lg shadow-md rotate-12">
+<span class="material-symbols-outlined text-outline">description</span>
+</div>
+</div>
+<h2 class="text-2xl font-bold text-on-surface mb-3 tracking-tight">
+                        Belum ada field ditempatkan
+                    </h2>
+<p class="text-on-surface-variant leading-relaxed body-md">
+                        Drag elemen dari panel kiri untuk mulai mengatur posisi tanda tangan dan informasi lainnya pada dokumen ini.
+                    </p>
+<div class="mt-8 flex gap-2 items-center text-primary font-semibold text-sm">
+<span class="material-symbols-outlined text-lg">arrow_back</span>
+<span>Lihat Panel Elemen</span>
+</div>
+</div>
+<!-- Subtle PDF Watermark/Grid Background -->
+<div class="absolute inset-0 pointer-events-none opacity-[0.03] border-[20px] border-on-surface"></div>
+</div>
+<!-- Zoom Controls (Float) -->
+<div class="fixed bottom-8 right-8 flex flex-col gap-2">
+<button class="w-12 h-12 bg-white rounded-full premium-shadow flex items-center justify-center text-on-surface hover:text-primary transition-colors">
+<span class="material-symbols-outlined">add</span>
+</button>
+<div class="w-12 h-10 bg-white rounded-xl premium-shadow flex items-center justify-center text-xs font-bold">100%</div>
+<button class="w-12 h-12 bg-white rounded-full premium-shadow flex items-center justify-center text-on-surface hover:text-primary transition-colors">
+<span class="material-symbols-outlined">remove</span>
+</button>
+</div>
+</main>
+<!-- Right Properties Panel (Suppressed/Empty for focus) -->
+<aside class="w-80 bg-surface border-l border-outline-variant/20 flex flex-col">
+<div class="p-6">
+<h3 class="text-xs font-bold uppercase tracking-widest text-outline mb-6">Properties</h3>
+<div class="flex flex-col items-center justify-center h-64 border-2 border-dashed border-outline-variant/40 rounded-2xl p-6 text-center">
+<span class="material-symbols-outlined text-outline/40 text-4xl mb-4">select_window</span>
+<p class="text-xs text-on-surface-variant">Pilih elemen di kanvas untuk mengubah pengaturannya</p>
+</div>
+</div>
+</aside>
+</div>
+</body></html>

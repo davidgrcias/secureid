@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+
+<html class="light" lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "background": "#f8f9ff",
+                        "on-error": "#ffffff",
+                        "tertiary": "#35445a",
+                        "secondary-fixed-dim": "#3ce36a",
+                        "primary-container": "#0052cc",
+                        "on-primary-container": "#c4d2ff",
+                        "surface-container-high": "#dee9fc",
+                        "secondary-container": "#5cfd80",
+                        "tertiary-fixed-dim": "#b7c8e1",
+                        "primary": "#003d9b",
+                        "on-secondary-fixed-variant": "#00531e",
+                        "on-primary-fixed": "#001848",
+                        "inverse-surface": "#26313f",
+                        "primary-fixed": "#dae2ff",
+                        "surface-bright": "#f8f9ff",
+                        "tertiary-fixed": "#d3e4fe",
+                        "on-surface": "#111c2a",
+                        "on-tertiary-fixed": "#0b1c30",
+                        "on-error-container": "#93000a",
+                        "secondary-fixed": "#69ff87",
+                        "on-primary-fixed-variant": "#0040a2",
+                        "surface-container": "#e5eeff",
+                        "primary-fixed-dim": "#b2c5ff",
+                        "inverse-primary": "#b2c5ff",
+                        "tertiary-container": "#4c5c72",
+                        "on-primary": "#ffffff",
+                        "on-surface-variant": "#434654",
+                        "on-tertiary-fixed-variant": "#38485d",
+                        "outline-variant": "#c3c6d6",
+                        "outline": "#737685",
+                        "surface-container-low": "#eff4ff",
+                        "secondary": "#006e2a",
+                        "error": "#ba1a1a",
+                        "on-secondary-container": "#00732c",
+                        "surface": "#f8f9ff",
+                        "on-secondary-fixed": "#002108",
+                        "surface-container-highest": "#d8e3f6",
+                        "surface-variant": "#d8e3f6",
+                        "surface-container-lowest": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-tertiary": "#ffffff",
+                        "inverse-on-surface": "#eaf1ff",
+                        "surface-tint": "#0c56d0",
+                        "on-background": "#111c2a",
+                        "on-tertiary-container": "#c4d4ee",
+                        "on-secondary": "#ffffff",
+                        "surface-dim": "#cfdbee"
+                    },
+                    fontFamily: {
+                        "headline": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .pdf-shadow {
+            box-shadow: 0 10px 30px -10px rgba(0, 61, 155, 0.15);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-background font-body text-on-surface overflow-hidden h-screen">
+<!-- TopNavBar Implementation from JSON -->
+<header class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-sm h-16 flex items-center justify-between px-6 font-inter tracking-tight">
+<div class="flex items-center gap-4">
+<span class="text-xl font-bold text-blue-700 dark:text-blue-400">SecureID V2</span>
+<div class="h-6 w-[1px] bg-outline-variant/30 mx-2"></div>
+<span class="text-sm font-medium text-on-surface-variant">Penandatanganan Kontrak Kerja.pdf</span>
+</div>
+<div class="flex items-center gap-6">
+<div class="hidden md:flex items-center bg-slate-100 dark:bg-slate-800 rounded-full px-4 py-1.5 border border-transparent focus-within:border-primary-container transition-all">
+<span class="material-symbols-outlined text-[20px] text-slate-500" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-48 text-on-surface" placeholder="Cari di dokumen..." type="text"/>
+</div>
+<div class="flex gap-4">
+<button class="material-symbols-outlined text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 p-2 rounded-full duration-300 ease-out" data-icon="notifications">notifications</button>
+<button class="material-symbols-outlined text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 p-2 rounded-full duration-300 ease-out" data-icon="help">help</button>
+<div class="h-8 w-8 rounded-full overflow-hidden border border-outline-variant bg-surface-container">
+<img alt="User profile photo" class="w-full h-full object-cover" data-alt="professional headshot of a business woman in a dark blazer with a neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAstyDYG9weuYYwSdWzAdan_w0WJIVZlkHdfzaUjs2Puz_ev7-vKTHpYysMwtjmXS5ZDSG2YEfM5QOjUAr_4CR2pbYp6Pfa9fHfqIw58Gz0b44V4aa5RZ-Nva3YDvjYV7qOHWCQboyiZq064yaMIcNnFtt6QBGWyEnlSE0ir53TRzJGdV8k-nx_VpJPivczC-hFs9XMZpcKPj7CilTp_ssDNy04B0gZD1sqorLx1v0bn6MfKipwKbhPiXYtRHxUaQZjYfiPBPUSTyn5"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Workspace -->
+<main class="pt-16 h-full flex overflow-hidden">
+<!-- Left Sidebar: Toolbar -->
+<aside class="w-72 bg-surface-container-lowest flex flex-col p-6 z-20 overflow-y-auto border-r border-transparent">
+<div class="mb-8">
+<h3 class="text-[10px] font-bold tracking-widest text-outline uppercase mb-6">Elemen Penandatangan</h3>
+<div class="grid grid-cols-1 gap-3">
+<!-- Tool Item: Tanda Tangan -->
+<div class="flex items-center gap-3 p-3 rounded-xl border border-outline-variant/20 bg-surface hover:bg-surface-container-low cursor-grab active:cursor-grabbing transition-colors group">
+<div class="w-10 h-10 flex items-center justify-center rounded-lg bg-primary-container/10 text-primary-container group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" data-icon="history_edu">history_edu</span>
+</div>
+<div class="flex-1">
+<p class="text-sm font-semibold">Tanda Tangan</p>
+<p class="text-[11px] text-on-surface-variant">Tarik ke dokumen</p>
+</div>
+<span class="material-symbols-outlined text-outline-variant" data-icon="drag_indicator">drag_indicator</span>
+</div>
+<!-- Tool Item: Inisial -->
+<div class="flex items-center gap-3 p-3 rounded-xl border border-outline-variant/20 bg-surface hover:bg-surface-container-low cursor-grab active:cursor-grabbing transition-colors group">
+<div class="w-10 h-10 flex items-center justify-center rounded-lg bg-surface-container-high text-tertiary">
+<span class="material-symbols-outlined" data-icon="font_download">font_download</span>
+</div>
+<div class="flex-1">
+<p class="text-sm font-semibold">Inisial</p>
+</div>
+<span class="material-symbols-outlined text-outline-variant" data-icon="drag_indicator">drag_indicator</span>
+</div>
+<!-- Tool Item: Tanggal -->
+<div class="flex items-center gap-3 p-3 rounded-xl border border-outline-variant/20 bg-surface hover:bg-surface-container-low cursor-grab active:cursor-grabbing transition-colors group">
+<div class="w-10 h-10 flex items-center justify-center rounded-lg bg-surface-container-high text-tertiary">
+<span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
+</div>
+<div class="flex-1">
+<p class="text-sm font-semibold">Tanggal</p>
+</div>
+<span class="material-symbols-outlined text-outline-variant" data-icon="drag_indicator">drag_indicator</span>
+</div>
+<!-- Tool Item: Teks -->
+<div class="flex items-center gap-3 p-3 rounded-xl border border-outline-variant/20 bg-surface hover:bg-surface-container-low cursor-grab active:cursor-grabbing transition-colors group">
+<div class="w-10 h-10 flex items-center justify-center rounded-lg bg-surface-container-high text-tertiary">
+<span class="material-symbols-outlined" data-icon="text_fields">text_fields</span>
+</div>
+<div class="flex-1">
+<p class="text-sm font-semibold">Teks</p>
+</div>
+<span class="material-symbols-outlined text-outline-variant" data-icon="drag_indicator">drag_indicator</span>
+</div>
+<!-- Tool Item: Centang -->
+<div class="flex items-center gap-3 p-3 rounded-xl border border-outline-variant/20 bg-surface hover:bg-surface-container-low cursor-grab active:cursor-grabbing transition-colors group">
+<div class="w-10 h-10 flex items-center justify-center rounded-lg bg-surface-container-high text-tertiary">
+<span class="material-symbols-outlined" data-icon="check_box">check_box</span>
+</div>
+<div class="flex-1">
+<p class="text-sm font-semibold">Centang</p>
+</div>
+<span class="material-symbols-outlined text-outline-variant" data-icon="drag_indicator">drag_indicator</span>
+</div>
+</div>
+</div>
+<div class="mt-auto pt-6 border-t border-outline-variant/10">
+<div class="p-4 rounded-xl bg-primary/5 border border-primary/10">
+<p class="text-xs font-bold text-primary mb-1 uppercase tracking-wider">Tips Cepat</p>
+<p class="text-[11px] text-on-surface-variant leading-relaxed">Gunakan shortcut <kbd class="px-1 py-0.5 bg-white border border-outline-variant rounded text-[9px]">⌘</kbd> + <kbd class="px-1 py-0.5 bg-white border border-outline-variant rounded text-[9px]">S</kbd> untuk menyimpan draf pengerjaan Anda.</p>
+</div>
+</div>
+</aside>
+<!-- Center: PDF Preview -->
+<section class="flex-1 bg-surface-dim relative overflow-hidden flex flex-col items-center">
+<!-- Toolbar Dokumen -->
+<div class="w-full bg-surface-container-lowest/50 backdrop-blur-md px-6 py-2 flex justify-between items-center border-b border-white/20">
+<div class="flex items-center gap-2">
+<button class="p-1.5 hover:bg-white/50 rounded-lg transition-colors"><span class="material-symbols-outlined text-on-surface-variant" data-icon="zoom_in">zoom_in</span></button>
+<span class="text-xs font-semibold text-on-surface-variant">100%</span>
+<button class="p-1.5 hover:bg-white/50 rounded-lg transition-colors"><span class="material-symbols-outlined text-on-surface-variant" data-icon="zoom_out">zoom_out</span></button>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-xs font-medium text-outline">Halaman 1 dari 4</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-1.5 hover:bg-white/50 rounded-lg transition-colors"><span class="material-symbols-outlined text-on-surface-variant" data-icon="undo">undo</span></button>
+<button class="p-1.5 hover:bg-white/50 rounded-lg transition-colors"><span class="material-symbols-outlined text-on-surface-variant" data-icon="redo">redo</span></button>
+</div>
+</div>
+<!-- Scrollable PDF Canvas -->
+<div class="flex-1 w-full overflow-y-auto py-12 custom-scrollbar flex justify-center">
+<div class="w-[800px] min-h-[1131px] bg-white pdf-shadow relative mb-12 p-24 select-none">
+<!-- Fake PDF Content Overlay -->
+<div class="space-y-6 opacity-80 pointer-events-none">
+<h1 class="text-2xl font-extrabold text-slate-800 border-b-2 border-slate-200 pb-4">SURAT PERJANJIAN KERJA SAMA</h1>
+<p class="text-xs text-slate-500 leading-relaxed">Yang bertanda tangan di bawah ini, selanjutnya disebut sebagai "Pihak Pertama" dan "Pihak Kedua", dengan ini menyatakan sepakat untuk mengikatkan diri dalam sebuah kerja sama strategis pembangunan infrastruktur digital...</p>
+<div class="h-4 w-3/4 bg-slate-100 rounded"></div>
+<div class="h-4 w-full bg-slate-100 rounded"></div>
+<div class="h-4 w-5/6 bg-slate-100 rounded"></div>
+<div class="grid grid-cols-2 gap-12 mt-24">
+<div>
+<div class="h-4 w-32 bg-slate-100 rounded mb-4"></div>
+<div class="h-24 w-full border-b border-slate-300"></div>
+<p class="text-[10px] mt-2 font-bold text-slate-400">PIHAK PERTAMA</p>
+</div>
+<div class="relative">
+<div class="h-4 w-32 bg-slate-100 rounded mb-4"></div>
+<!-- Draggable Area Target -->
+<div class="h-24 w-full border-b border-slate-300 flex items-center justify-center bg-primary-container/5">
+<div class="absolute inset-0 border-2 border-dashed border-primary-container rounded-lg flex items-center justify-center bg-primary-container/5 pointer-events-auto cursor-move">
+<div class="relative flex flex-col items-center">
+<div class="absolute -top-10 -right-10 bg-primary text-white text-[10px] font-bold h-6 w-6 rounded-full flex items-center justify-center border-2 border-white shadow-md">1</div>
+<span class="material-symbols-outlined text-primary text-3xl mb-1" data-icon="history_edu">history_edu</span>
+<span class="text-[10px] font-bold text-primary uppercase tracking-tighter">Tanda Tangan di Sini</span>
+</div>
+</div>
+</div>
+<p class="text-[10px] mt-2 font-bold text-slate-400">PIHAK KEDUA</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Right Sidebar: Recipients & Actions -->
+<aside class="w-80 bg-surface-container-lowest flex flex-col border-l border-transparent z-20">
+<div class="p-6 flex-1 overflow-y-auto custom-scrollbar">
+<div class="mb-8">
+<div class="flex justify-between items-center mb-6">
+<h3 class="text-[10px] font-bold tracking-widest text-outline uppercase">Penerima &amp; Urutan</h3>
+<button class="text-primary font-bold text-[10px] hover:underline flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="person_add">person_add</span>
+                            TAMBAH
+                        </button>
+</div>
+<div class="space-y-4">
+<!-- Signer 1 -->
+<div class="p-4 rounded-xl border-2 border-primary-container bg-primary-container/5 relative">
+<div class="flex items-start gap-3">
+<div class="flex flex-col items-center gap-1">
+<span class="material-symbols-outlined text-outline-variant cursor-grab" data-icon="drag_handle">drag_handle</span>
+<div class="w-6 h-6 rounded-full bg-primary text-white text-[10px] font-bold flex items-center justify-center">1</div>
+</div>
+<div class="flex-1">
+<input class="w-full bg-transparent border-none p-0 text-sm font-bold text-on-surface focus:ring-0" type="text" value="Budi Santoso"/>
+<input class="w-full bg-transparent border-none p-0 text-xs text-on-surface-variant focus:ring-0" type="text" value="budi.santoso@corporate.id"/>
+<div class="mt-2 flex items-center gap-2">
+<span class="px-2 py-0.5 rounded bg-primary-container/10 text-primary text-[9px] font-bold border border-primary-container/20">PENANDATANGAN</span>
+</div>
+</div>
+<button class="material-symbols-outlined text-outline-variant hover:text-error transition-colors" data-icon="close">close</button>
+</div>
+</div>
+<!-- Signer 2 -->
+<div class="p-4 rounded-xl border border-outline-variant/30 bg-surface relative opacity-60">
+<div class="flex items-start gap-3">
+<div class="flex flex-col items-center gap-1">
+<span class="material-symbols-outlined text-outline-variant cursor-grab" data-icon="drag_handle">drag_handle</span>
+<div class="w-6 h-6 rounded-full bg-outline-variant text-white text-[10px] font-bold flex items-center justify-center">2</div>
+</div>
+<div class="flex-1">
+<input class="w-full bg-transparent border-none p-0 text-sm font-medium text-on-surface focus:ring-0" placeholder="Nama Lengkap" type="text"/>
+<input class="w-full bg-transparent border-none p-0 text-xs text-on-surface-variant focus:ring-0" placeholder="Email atau SecureID" type="text"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="mb-8">
+<h3 class="text-[10px] font-bold tracking-widest text-outline uppercase mb-4">Pengaturan Dokumen</h3>
+<div class="space-y-4">
+<label class="flex items-center justify-between cursor-pointer group">
+<span class="text-xs font-medium text-on-surface">Urutan penandatanganan</span>
+<div class="w-10 h-5 bg-primary-container/20 rounded-full relative transition-colors group-hover:bg-primary-container/30">
+<div class="absolute right-1 top-1 w-3 h-3 bg-primary rounded-full shadow-sm"></div>
+</div>
+</label>
+<label class="flex items-center justify-between cursor-pointer group">
+<span class="text-xs font-medium text-on-surface">Pesan pengingat otomatis</span>
+<div class="w-10 h-5 bg-slate-200 rounded-full relative transition-colors">
+<div class="absolute left-1 top-1 w-3 h-3 bg-white rounded-full shadow-sm"></div>
+</div>
+</label>
+</div>
+</div>
+</div>
+<!-- Sticky Bottom Actions -->
+<div class="p-6 bg-surface-container-lowest border-t border-outline-variant/10 space-y-3">
+<button class="w-full py-3 px-4 rounded-xl bg-primary text-white font-bold text-sm hover:bg-primary-container transition-all shadow-lg shadow-primary-container/20 flex items-center justify-center gap-2 group">
+                    Kirim untuk Ditandatangani
+                    <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform" data-icon="send">send</span>
+</button>
+<button class="w-full py-3 px-4 rounded-xl bg-surface-container-highest text-tertiary font-bold text-sm hover:bg-surface-container-high transition-all flex items-center justify-center gap-2">
+                    Simpan Draft
+                    <span class="material-symbols-outlined text-sm" data-icon="save">save</span>
+</button>
+</div>
+</aside>
+</main>
+<!-- Floating Helper for Mobile Suppression Logic (Not visible here but part of the builder system) -->
+<div class="fixed bottom-6 left-6 md:hidden">
+<button class="w-14 h-14 bg-primary text-white rounded-full shadow-2xl flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+</div>
+</body></html>

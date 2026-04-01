@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+
+<html class="light" lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SecureID V2 - Dokumen Berhasil Dikirim</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "background": "#f8f9ff",
+              "on-error": "#ffffff",
+              "tertiary": "#35445a",
+              "secondary-fixed-dim": "#3ce36a",
+              "primary-container": "#0052cc",
+              "on-primary-container": "#c4d2ff",
+              "surface-container-high": "#dee9fc",
+              "secondary-container": "#5cfd80",
+              "tertiary-fixed-dim": "#b7c8e1",
+              "primary": "#003d9b",
+              "on-secondary-fixed-variant": "#00531e",
+              "on-primary-fixed": "#001848",
+              "inverse-surface": "#26313f",
+              "primary-fixed": "#dae2ff",
+              "surface-bright": "#f8f9ff",
+              "tertiary-fixed": "#d3e4fe",
+              "on-surface": "#111c2a",
+              "on-tertiary-fixed": "#0b1c30",
+              "on-error-container": "#93000a",
+              "secondary-fixed": "#69ff87",
+              "on-primary-fixed-variant": "#0040a2",
+              "surface-container": "#e5eeff",
+              "primary-fixed-dim": "#b2c5ff",
+              "inverse-primary": "#b2c5ff",
+              "tertiary-container": "#4c5c72",
+              "on-primary": "#ffffff",
+              "on-surface-variant": "#434654",
+              "on-tertiary-fixed-variant": "#38485d",
+              "outline-variant": "#c3c6d6",
+              "outline": "#737685",
+              "surface-container-low": "#eff4ff",
+              "secondary": "#006e2a",
+              "error": "#ba1a1a",
+              "on-secondary-container": "#00732c",
+              "surface": "#f8f9ff",
+              "on-secondary-fixed": "#002108",
+              "surface-container-highest": "#d8e3f6",
+              "surface-variant": "#d8e3f6",
+              "surface-container-lowest": "#ffffff",
+              "error-container": "#ffdad6",
+              "on-tertiary": "#ffffff",
+              "inverse-on-surface": "#eaf1ff",
+              "surface-tint": "#0c56d0",
+              "on-background": "#111c2a",
+              "on-tertiary-container": "#c4d4ee",
+              "on-secondary": "#ffffff",
+              "surface-dim": "#cfdbee"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .signature-ghost-border {
+            border: 1px solid rgba(195, 198, 214, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- TopNavBar (Shared Component) -->
+<nav class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl fixed top-0 w-full z-50 shadow-sm">
+<div class="flex items-center justify-between px-6 h-16 w-full">
+<div class="flex items-center gap-4">
+<span class="text-xl font-bold text-blue-700 dark:text-blue-400 font-inter tracking-tight">SecureID V2</span>
+</div>
+<div class="hidden md:flex items-center gap-8">
+<a class="text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors duration-300 ease-out py-2 px-3 rounded-lg" href="#">Dashboard</a>
+<a class="text-blue-700 dark:text-blue-400 font-semibold py-2 px-3 rounded-lg" href="#">Workflows</a>
+<a class="text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors duration-300 ease-out py-2 px-3 rounded-lg" href="#">Vault</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-slate-600 hover:bg-slate-50 rounded-full transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<img alt="User profile photo" class="w-8 h-8 rounded-full object-cover" data-alt="Professional headshot of a businessman in a suit against a neutral background with soft studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHOeq2Ah4_0sjj0c5uBjsFeB0XxI4jGfgchNQlbHb8lIWYEbvUnh9ALBri_XwJukVfSOG1uf_uquDvDjw3BeMme6V4oxyzq9pqLy0qQRC34Sd8xO0EVYeUmrEZbnRoNlEKaUyJWtLoZJp4tP1Lt_JrFyxCPDaVyVK1EMLidssKYl6nxoeQe1dOjRO4J89-yNsU_kz_iEk4FRWPY_Z0AxR9og4GMbL8ShcXPVEvHce9Dw9fRSN7Rrsup7dBJPJHMBmi7A7rCHWHtHb2"/>
+</div>
+</div>
+</nav>
+<main class="pt-24 pb-16 px-4 md:px-8 max-w-5xl mx-auto">
+<!-- Hero Success Section -->
+<section class="flex flex-col items-center text-center mb-12">
+<div class="w-24 h-24 bg-secondary-container text-on-secondary-container rounded-full flex items-center justify-center mb-6 shadow-lg shadow-secondary/20">
+<span class="material-symbols-outlined !text-5xl" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<h1 class="text-3xl md:text-4xl font-headline font-extrabold tracking-tight text-on-surface mb-2">Dokumen Berhasil Dikirim</h1>
+<p class="text-on-surface-variant text-lg">Dokumen telah dikirim ke 3 penerima untuk proses penandatanganan.</p>
+</section>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+<!-- Main Content: Link Sharing & Quick Actions -->
+<div class="md:col-span-7 flex flex-col gap-6">
+<!-- Share Card -->
+<div class="bg-surface-container-lowest p-8 rounded-xl signature-ghost-border shadow-sm">
+<h2 class="text-sm font-label font-bold uppercase tracking-widest text-primary mb-6">Bagikan Tautan Review</h2>
+<div class="flex items-center gap-3 p-4 bg-surface-container-low rounded-lg mb-8 group transition-all duration-300 hover:bg-surface-container">
+<span class="material-symbols-outlined text-outline">link</span>
+<span class="text-on-surface-variant flex-grow truncate font-medium">secureid.v2/review/auth-8829-signature-doc</span>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity">
+                            Salin Tautan
+                        </button>
+</div>
+<div class="grid grid-cols-3 gap-4">
+<button class="flex flex-col items-center gap-3 p-4 rounded-xl hover:bg-surface-container-low transition-colors group">
+<div class="w-12 h-12 bg-[#25D366]/10 text-[#25D366] rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined !text-2xl">chat</span>
+</div>
+<span class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">WhatsApp</span>
+</button>
+<button class="flex flex-col items-center gap-3 p-4 rounded-xl hover:bg-surface-container-low transition-colors group">
+<div class="w-12 h-12 bg-primary/10 text-primary rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined !text-2xl">mail</span>
+</div>
+<span class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Email</span>
+</button>
+<button class="flex flex-col items-center gap-3 p-4 rounded-xl hover:bg-surface-container-low transition-colors group">
+<div class="w-12 h-12 bg-tertiary/10 text-tertiary rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined !text-2xl">qr_code_2</span>
+</div>
+<span class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">QR Code</span>
+</button>
+</div>
+</div>
+<!-- Next Steps Action -->
+<div class="flex flex-col sm:flex-row gap-4">
+<button class="flex-1 bg-primary text-on-primary py-4 px-6 rounded-xl font-bold flex items-center justify-center gap-2 hover:shadow-xl hover:shadow-primary/20 transition-all active:scale-[0.98]">
+<span class="material-symbols-outlined">dashboard</span>
+                        Kembali ke Dashboard
+                    </button>
+<button class="flex-1 bg-surface-container-highest text-primary py-4 px-6 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-surface-container-high transition-colors active:scale-[0.98]">
+<span class="material-symbols-outlined">description</span>
+                        Lihat Dokumen
+                    </button>
+</div>
+</div>
+<!-- Sidebar: Status List -->
+<div class="md:col-span-5">
+<div class="bg-surface-container-low rounded-xl p-6 sticky top-24">
+<div class="flex items-center justify-between mb-6">
+<h2 class="text-sm font-label font-bold uppercase tracking-widest text-on-surface">Status Real-time</h2>
+<span class="px-2 py-1 bg-secondary-container text-on-secondary-container text-[10px] font-bold rounded uppercase">Aktif</span>
+</div>
+<div class="space-y-4">
+<!-- Recipient 1 -->
+<div class="bg-surface-container-lowest p-4 rounded-lg flex items-center gap-4 signature-ghost-border transition-transform hover:translate-x-1">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-primary font-bold">
+                                AM
+                            </div>
+<div class="flex-grow">
+<p class="text-sm font-bold text-on-surface">Aditya Maulana</p>
+<p class="text-xs text-on-surface-variant">aditya.m@corp.id</p>
+</div>
+<div class="flex flex-col items-end gap-1">
+<span class="text-[10px] font-bold text-secondary uppercase">Terkirim</span>
+<span class="material-symbols-outlined text-secondary !text-lg" style="font-variation-settings: 'FILL' 1;">mark_email_read</span>
+</div>
+</div>
+<!-- Recipient 2 -->
+<div class="bg-surface-container-lowest p-4 rounded-lg flex items-center gap-4 signature-ghost-border transition-transform hover:translate-x-1">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-primary font-bold">
+                                SL
+                            </div>
+<div class="flex-grow">
+<p class="text-sm font-bold text-on-surface">Siti Lestari</p>
+<p class="text-xs text-on-surface-variant">s.lestari@firm.com</p>
+</div>
+<div class="flex flex-col items-end gap-1">
+<span class="text-[10px] font-bold text-secondary uppercase">Terkirim</span>
+<span class="material-symbols-outlined text-secondary !text-lg" style="font-variation-settings: 'FILL' 1;">mark_email_read</span>
+</div>
+</div>
+<!-- Recipient 3 -->
+<div class="bg-surface-container-lowest p-4 rounded-lg flex items-center gap-4 signature-ghost-border transition-transform hover:translate-x-1">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-primary font-bold">
+                                BP
+                            </div>
+<div class="flex-grow">
+<p class="text-sm font-bold text-on-surface">Bambang Pamungkas</p>
+<p class="text-xs text-on-surface-variant">bp@legal.id</p>
+</div>
+<div class="flex flex-col items-end gap-1">
+<span class="text-[10px] font-bold text-secondary uppercase">Terkirim</span>
+<span class="material-symbols-outlined text-secondary !text-lg" style="font-variation-settings: 'FILL' 1;">mark_email_read</span>
+</div>
+</div>
+</div>
+<div class="mt-8 pt-6 border-t border-outline-variant/30 text-center">
+<p class="text-xs text-on-surface-variant italic mb-2">"Siap untuk ditandatangani"</p>
+<p class="text-[10px] text-outline uppercase tracking-tighter">Estimasi selesai: 24 Jam</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Visual Anchor: Tonal Decorative Element -->
+<div class="mt-20 relative h-64 overflow-hidden rounded-3xl signature-ghost-border">
+<div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-surface-container-high"></div>
+<div class="absolute inset-0 flex items-center justify-between px-12">
+<div class="max-w-xs">
+<h3 class="text-xl font-headline font-bold text-on-surface mb-2">Simpan di Vault</h3>
+<p class="text-sm text-on-surface-variant">Semua dokumen yang dikirim secara otomatis dienkripsi dan disimpan dalam Vault perusahaan Anda.</p>
+</div>
+<div class="hidden md:block">
+<span class="material-symbols-outlined !text-8xl text-primary/10">enhanced_encryption</span>
+</div>
+</div>
+<!-- Background Image Integration -->
+<div class="absolute right-0 top-0 w-1/2 h-full opacity-10 mix-blend-overlay">
+<img alt="Security pattern background" class="w-full h-full object-cover" data-alt="Abstract high-tech digital security pattern with glowing blue circuits and futuristic interface elements" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAcAAZ3tq71_opldaBFRqoG35jg6WzKdpVAMgbUFXGQHYdBy39De2VamaCkWvBM3Wg4K_B_NBVQDkLuf5xQDxEwRdNsKuILaip3lnQlAgBP689DluIbIVQcZsRQ4s2asyCGjv0LWrzXLCe-vq0Pm8F75RKc8XRwduCWySJ14wxMdi9JYATdVmfy9GikhTxkxHNRN4iIS7prkmcvooGk2RDptdkz-tyeY6Hs7gz9j8I-dJC1Ui89yRfmBl3y5dSy-uBMyuFMcFpDsR2x"/>
+</div>
+</div>
+</main>
+<!-- Success Feedback Overlay (Visual Only) -->
+<div class="fixed bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-3 bg-inverse-surface text-inverse-on-surface px-6 py-3 rounded-full shadow-2xl z-50">
+<span class="material-symbols-outlined text-secondary-fixed-dim">verified</span>
+<span class="text-sm font-medium">Email notifikasi telah dikirim ke semua penerima</span>
+</div>
+</body></html>

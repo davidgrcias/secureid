@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+
+<html class="light" lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SecureID | Riwayat &amp; Audit Log</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "inverse-surface": "#26313f",
+                        "background": "#f8f9ff",
+                        "inverse-on-surface": "#eaf1ff",
+                        "tertiary": "#35445a",
+                        "surface-container-high": "#dee9fc",
+                        "secondary": "#006e2a",
+                        "on-surface": "#111c2a",
+                        "surface-tint": "#0c56d0",
+                        "error-container": "#ffdad6",
+                        "on-error-container": "#93000a",
+                        "secondary-fixed": "#69ff87",
+                        "surface": "#f8f9ff",
+                        "outline": "#737685",
+                        "inverse-primary": "#b2c5ff",
+                        "secondary-fixed-dim": "#3ce36a",
+                        "on-surface-variant": "#434654",
+                        "on-primary-container": "#c4d2ff",
+                        "tertiary-container": "#4c5c72",
+                        "on-secondary-fixed": "#002108",
+                        "on-error": "#ffffff",
+                        "surface-variant": "#d8e36f6",
+                        "tertiary-fixed-dim": "#b7c8e1",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-container": "#00732c",
+                        "surface-dim": "#cfdbee",
+                        "primary-container": "#0052cc",
+                        "on-primary": "#ffffff",
+                        "on-primary-fixed": "#001848",
+                        "on-tertiary-fixed": "#0b1c30",
+                        "on-background": "#111c2a",
+                        "primary-fixed-dim": "#b2c5ff",
+                        "primary": "#003d9b",
+                        "surface-container-low": "#eff4ff",
+                        "surface-bright": "#f8f9ff",
+                        "on-primary-fixed-variant": "#0040a2",
+                        "error": "#ba1a1a",
+                        "secondary-container": "#5cfd80",
+                        "primary-fixed": "#dae2ff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-container": "#c4d4ee",
+                        "on-tertiary-fixed-variant": "#38485d",
+                        "surface-container": "#e5eeff",
+                        "on-secondary-fixed-variant": "#00531e",
+                        "tertiary-fixed": "#d3e4fe",
+                        "outline-variant": "#c3c6d6",
+                        "surface-container-highest": "#d8e3f6"
+                    },
+                    fontFamily: {
+                        "headline": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-surface antialiased overflow-x-hidden">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-lg shadow-sm px-6 py-3 flex justify-between items-center">
+<div class="flex items-center gap-8">
+<span class="text-2xl font-black tracking-tight text-[#111c2a]">SecureID</span>
+<div class="hidden md:flex items-center bg-surface-container-low px-4 py-2 rounded-lg gap-3 w-80">
+<span class="material-symbols-outlined text-outline text-sm">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-full" placeholder="Cari ID Transaksi..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-blue-50 transition-colors rounded-full relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<div class="h-8 w-8 rounded-full overflow-hidden border border-outline-variant">
+<img alt="User Avatar" data-alt="Professional headshot of a smiling Indonesian executive in a business setting with soft office lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDgzUYk8Q_trDh6TBI-pyhxmV15lEcX5ZghBn4uU8PBF304WZIU5RziZIPsabcofAESPkvcx0FCJq3OrJ8lU5usZzTqoTZEwHhseSU4W22LkP1MReQHfuY9QPMXD0G19Dt8b6En3HlVpTc8P1KgdODGCfSfTNOAK1COK6mK-9IbnLC_gfT2MgJ7uG33MQWU9G2z1pDorQj24pYzPgRMHp3eBbrzvhwH5Ybk_awF_UNEEGq5FLvNa1RNrCIXqcbUp0DRrUyieqNnRTGN"/>
+</div>
+</div>
+</nav>
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-full w-64 z-40 bg-surface-container-low flex flex-col pt-20 pb-6 px-4 gap-2">
+<div class="px-4 py-4 mb-4 flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-primary-container flex items-center justify-center text-white font-bold">BS</div>
+<div>
+<p class="text-sm font-bold text-on-surface">Budi Santoso</p>
+<p class="text-[10px] text-outline uppercase tracking-widest font-semibold">Verified Member</p>
+</div>
+</div>
+<nav class="space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-blue-50 transition-all rounded-lg text-sm font-medium" href="#">
+<span class="material-symbols-outlined">home</span> Beranda
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 bg-white text-[#0052CC] font-bold shadow-sm rounded-lg text-sm" href="#">
+<span class="material-symbols-outlined">description</span> Dokumen Saya
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-blue-50 transition-all rounded-lg text-sm font-medium" href="#">
+<span class="material-symbols-outlined">send</span> Kirim Dokumen
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-blue-50 transition-all rounded-lg text-sm font-medium" href="#">
+<span class="material-symbols-outlined">verified_user</span> Verifikasi Identitas
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-blue-50 transition-all rounded-lg text-sm font-medium" href="#">
+<span class="material-symbols-outlined">person</span> Profil
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-blue-50 transition-all rounded-lg text-sm font-medium" href="#">
+<span class="material-symbols-outlined">notifications</span> Notifikasi
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-blue-50 transition-all rounded-lg text-sm font-medium" href="#">
+<span class="material-symbols-outlined">help</span> Bantuan
+            </a>
+</nav>
+<div class="mt-auto px-2">
+<button class="w-full bg-primary-container text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:opacity-90 active:scale-95 transition-all text-sm">
+<span class="material-symbols-outlined text-sm">edit</span>
+                Mulai Tanda Tangan
+            </button>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="ml-64 pt-20 px-8 pb-12">
+<!-- Header Section -->
+<header class="flex justify-between items-end mb-8">
+<div>
+<h1 class="text-3xl font-black tracking-tight text-on-surface mb-2">Riwayat &amp; Audit Log</h1>
+<p class="text-on-surface-variant text-sm">Kelola dan pantau semua aktivitas transaksi dokumen Anda secara real-time.</p>
+</div>
+<button class="bg-[#0052CC] text-white px-5 py-2.5 rounded-lg font-bold flex items-center gap-2 text-sm hover:shadow-lg transition-all active:scale-95">
+<span class="material-symbols-outlined text-sm">download</span>
+                Export CSV
+            </button>
+</header>
+<!-- Stats Bento Grid -->
+<div class="grid grid-cols-4 gap-6 mb-8">
+<div class="bg-surface-container-lowest p-6 rounded-2xl shadow-sm border border-outline-variant/10">
+<p class="text-xs font-bold text-outline uppercase tracking-wider mb-2">Total Transaksi</p>
+<div class="flex items-baseline gap-2">
+<span class="text-2xl font-black text-on-surface">1,284</span>
+<span class="text-xs font-bold text-secondary flex items-center">+12% <span class="material-symbols-outlined text-[14px]">trending_up</span></span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-2xl shadow-sm border border-outline-variant/10">
+<p class="text-xs font-bold text-outline uppercase tracking-wider mb-2">Selesai Ditanda Tangan</p>
+<div class="flex items-baseline gap-2">
+<span class="text-2xl font-black text-on-surface">842</span>
+<span class="text-xs font-bold text-secondary">65% Total</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-2xl shadow-sm border border-outline-variant/10">
+<p class="text-xs font-bold text-outline uppercase tracking-wider mb-2">Menunggu Verifikasi</p>
+<div class="flex items-baseline gap-2">
+<span class="text-2xl font-black text-on-surface">43</span>
+<span class="text-xs font-bold text-primary-container">Aktif</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-2xl shadow-sm border border-outline-variant/10">
+<p class="text-xs font-bold text-outline uppercase tracking-wider mb-2">Dokumen Ditolak</p>
+<div class="flex items-baseline gap-2">
+<span class="text-2xl font-black text-error">12</span>
+<span class="text-xs font-bold text-error">Perlu Atensi</span>
+</div>
+</div>
+</div>
+<!-- Filter Bar -->
+<div class="bg-surface-container-lowest rounded-2xl p-4 mb-6 shadow-sm border border-outline-variant/20 flex flex-wrap items-center gap-4">
+<div class="flex items-center gap-2 bg-surface-container-low rounded-lg px-3 py-2 border border-outline-variant/30">
+<span class="material-symbols-outlined text-sm text-outline">calendar_today</span>
+<select class="bg-transparent border-none text-sm font-medium focus:ring-0 p-0 pr-8">
+<option>Semua Waktu</option>
+<option>7 Hari Terakhir</option>
+<option>30 Hari Terakhir</option>
+<option>Bulan Ini</option>
+</select>
+</div>
+<div class="flex items-center gap-2 bg-surface-container-low rounded-lg px-3 py-2 border border-outline-variant/30">
+<span class="material-symbols-outlined text-sm text-outline">filter_list</span>
+<select class="bg-transparent border-none text-sm font-medium focus:ring-0 p-0 pr-8">
+<option>Semua Status</option>
+<option>Signed</option>
+<option>Verified</option>
+<option>Uploaded</option>
+<option>Rejected</option>
+</select>
+</div>
+<div class="flex items-center gap-2 bg-surface-container-low rounded-lg px-3 py-2 border border-outline-variant/30">
+<span class="material-symbols-outlined text-sm text-outline">category</span>
+<select class="bg-transparent border-none text-sm font-medium focus:ring-0 p-0 pr-8">
+<option>Semua Aktivitas</option>
+<option>Signature</option>
+<option>KYC Check</option>
+<option>Document Upload</option>
+</select>
+</div>
+<div class="ml-auto">
+<button class="text-primary font-bold text-sm hover:underline">Reset Filter</button>
+</div>
+</div>
+<!-- Data Table Container -->
+<div class="bg-surface-container-lowest rounded-2xl shadow-sm border border-outline-variant/10 overflow-hidden">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant/30">
+<th class="px-6 py-4 text-[11px] font-black text-outline uppercase tracking-widest">ID Transaksi</th>
+<th class="px-6 py-4 text-[11px] font-black text-outline uppercase tracking-widest">Aktivitas</th>
+<th class="px-6 py-4 text-[11px] font-black text-outline uppercase tracking-widest">Nama Dokumen</th>
+<th class="px-6 py-4 text-[11px] font-black text-outline uppercase tracking-widest">Pengirim</th>
+<th class="px-6 py-4 text-[11px] font-black text-outline uppercase tracking-widest">Tanggal</th>
+<th class="px-6 py-4 text-[11px] font-black text-outline uppercase tracking-widest">Status</th>
+<th class="px-6 py-4"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10">
+<tr class="hover:bg-blue-50/30 transition-colors">
+<td class="px-6 py-4 font-mono text-xs font-bold text-[#0052CC]">#TRX-982145</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-primary">edit_square</span>
+<span class="text-sm font-semibold">Tanda Tangan</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<p class="text-sm font-bold text-on-surface">Surat_Perjanjian_Kerja_Q4.pdf</p>
+<p class="text-[10px] text-outline">1.2 MB • PDF</p>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-surface-container-high flex items-center justify-center text-[10px] font-bold">AS</div>
+<span class="text-sm text-on-surface-variant">Ani Setiawati</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<p class="text-sm text-on-surface-variant">24 Mei 2026</p>
+<p class="text-[10px] text-outline">14:20 WIB</p>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-container/20 text-secondary text-[10px] font-black uppercase tracking-wider">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Signed
+                            </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="material-symbols-outlined text-outline hover:text-primary transition-colors">more_vert</button>
+</td>
+</tr>
+<tr class="bg-surface-container-low/20 hover:bg-blue-50/30 transition-colors">
+<td class="px-6 py-4 font-mono text-xs font-bold text-[#0052CC]">#TRX-982144</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-primary">verified</span>
+<span class="text-sm font-semibold">Verifikasi KYC</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<p class="text-sm font-bold text-on-surface">Verifikasi_Identitas_Budi.jpg</p>
+<p class="text-[10px] text-outline">2.4 MB • JPG</p>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-primary-container/10 flex items-center justify-center text-[10px] font-bold text-primary">ID</div>
+<span class="text-sm text-on-surface-variant">System Identity</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<p class="text-sm text-on-surface-variant">24 Mei 2026</p>
+<p class="text-[10px] text-outline">12:05 WIB</p>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-container/10 text-[#0052CC] text-[10px] font-black uppercase tracking-wider">
+<span class="w-1.5 h-1.5 rounded-full bg-[#0052CC]"></span> Verified
+                            </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="material-symbols-outlined text-outline hover:text-primary transition-colors">more_vert</button>
+</td>
+</tr>
+<tr class="hover:bg-blue-50/30 transition-colors">
+<td class="px-6 py-4 font-mono text-xs font-bold text-[#0052CC]">#TRX-982143</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-primary">cloud_upload</span>
+<span class="text-sm font-semibold">Upload Dokumen</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<p class="text-sm font-bold text-on-surface">NDA_Partnership_Secure.pdf</p>
+<p class="text-[10px] text-outline">890 KB • PDF</p>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-surface-container-high flex items-center justify-center text-[10px] font-bold">BS</div>
+<span class="text-sm text-on-surface-variant">Budi Santoso</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<p class="text-sm text-on-surface-variant">23 Mei 2026</p>
+<p class="text-[10px] text-outline">18:50 WIB</p>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-high text-on-surface-variant text-[10px] font-black uppercase tracking-wider">
+<span class="w-1.5 h-1.5 rounded-full bg-outline"></span> Uploaded
+                            </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="material-symbols-outlined text-outline hover:text-primary transition-colors">more_vert</button>
+</td>
+</tr>
+<tr class="bg-surface-container-low/20 hover:bg-blue-50/30 transition-colors">
+<td class="px-6 py-4 font-mono text-xs font-bold text-[#0052CC]">#TRX-982140</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-primary">edit_square</span>
+<span class="text-sm font-semibold">Tanda Tangan</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<p class="text-sm font-bold text-on-surface">Invoice_0911_Marketing.pdf</p>
+<p class="text-[10px] text-outline">450 KB • PDF</p>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-surface-container-high flex items-center justify-center text-[10px] font-bold">RP</div>
+<span class="text-sm text-on-surface-variant">Rina Permata</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<p class="text-sm text-on-surface-variant">23 Mei 2026</p>
+<p class="text-[10px] text-outline">09:15 WIB</p>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-error-container/30 text-error text-[10px] font-black uppercase tracking-wider">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span> Rejected
+                            </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="material-symbols-outlined text-outline hover:text-primary transition-colors">more_vert</button>
+</td>
+</tr>
+</tbody>
+</table>
+<!-- Pagination -->
+<div class="px-6 py-4 bg-surface-container-lowest border-t border-outline-variant/30 flex items-center justify-between">
+<p class="text-xs text-outline font-medium">Menampilkan 1 - 10 dari 1,284 transaksi</p>
+<div class="flex items-center gap-1">
+<button class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-sm">chevron_left</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg bg-primary-container text-white text-xs font-bold">1</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-surface-container-low text-xs font-medium">2</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-surface-container-low text-xs font-medium">3</button>
+<span class="px-2 text-outline">...</span>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-surface-container-low text-xs font-medium">128</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="ml-64 w-[calc(100%-16rem)] border-t border-slate-100 bg-surface px-8 py-6 flex justify-between items-center">
+<p class="text-xs text-slate-500">Copyright 2026 PT SecureID Indonesia</p>
+<div class="flex gap-6">
+<a class="text-xs text-slate-500 hover:text-[#0052CC] transition-colors" href="#">Privacy</a>
+<a class="text-xs text-slate-500 hover:text-[#0052CC] transition-colors" href="#">Terms</a>
+<a class="text-xs text-slate-500 hover:text-[#0052CC] transition-colors" href="#">Contact</a>
+</div>
+</footer>
+</body></html>

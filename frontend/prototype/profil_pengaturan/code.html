@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+
+<html class="light" lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SecureID - Profil &amp; Pengaturan Akun</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "inverse-surface": "#26313f",
+                        "background": "#f8f9ff",
+                        "inverse-on-surface": "#eaf1ff",
+                        "tertiary": "#35445a",
+                        "surface-container-high": "#dee9fc",
+                        "secondary": "#006e2a",
+                        "on-surface": "#111c2a",
+                        "surface-tint": "#0c56d0",
+                        "error-container": "#ffdad6",
+                        "on-error-container": "#93000a",
+                        "secondary-fixed": "#69ff87",
+                        "surface": "#f8f9ff",
+                        "outline": "#737685",
+                        "inverse-primary": "#b2c5ff",
+                        "secondary-fixed-dim": "#3ce36a",
+                        "on-surface-variant": "#434654",
+                        "on-primary-container": "#c4d2ff",
+                        "tertiary-container": "#4c5c72",
+                        "on-secondary-fixed": "#002108",
+                        "on-error": "#ffffff",
+                        "surface-variant": "#d8e3f6",
+                        "tertiary-fixed-dim": "#b7c8e1",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-container": "#00732c",
+                        "surface-dim": "#cfdbee",
+                        "primary-container": "#0052cc",
+                        "on-primary": "#ffffff",
+                        "on-primary-fixed": "#001848",
+                        "on-tertiary-fixed": "#0b1c30",
+                        "on-background": "#111c2a",
+                        "primary-fixed-dim": "#b2c5ff",
+                        "primary": "#003d9b",
+                        "surface-container-low": "#eff4ff",
+                        "surface-bright": "#f8f9ff",
+                        "on-primary-fixed-variant": "#0040a2",
+                        "error": "#ba1a1a",
+                        "secondary-container": "#5cfd80",
+                        "primary-fixed": "#dae2ff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-container": "#c4d4ee",
+                        "on-tertiary-fixed-variant": "#38485d",
+                        "surface-container": "#e5eeff",
+                        "on-secondary-fixed-variant": "#00531e",
+                        "tertiary-fixed": "#d3e4fe",
+                        "outline-variant": "#c3c6d6",
+                        "surface-container-highest": "#d8e3f6"
+                    },
+                    fontFamily: {
+                        "headline": ["Inter", "sans-serif"],
+                        "body": ["Inter", "sans-serif"],
+                        "label": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-surface antialiased">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-lg dark:bg-slate-900/80 shadow-sm dark:shadow-none font-['Inter'] antialiased">
+<div class="flex justify-between items-center px-6 py-3 w-full">
+<div class="flex items-center gap-8">
+<span class="text-2xl font-black tracking-tight text-[#111c2a] dark:text-white">SecureID</span>
+<div class="hidden md:flex gap-6">
+<a class="text-[#111c2a] dark:text-slate-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors px-3 py-1 rounded" href="#">Dashboard</a>
+<a class="text-[#111c2a] dark:text-slate-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors px-3 py-1 rounded" href="#">Dokumen</a>
+<a class="text-[#0052CC] font-bold border-b-2 border-[#0052CC] px-3 py-1" href="#">Pengaturan</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden lg:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-xl">search</span>
+<input class="bg-surface-container-low border-none rounded-full pl-10 pr-4 py-2 w-64 focus:ring-2 focus:ring-primary text-sm" placeholder="Cari dokumen..." type="text"/>
+</div>
+<button class="p-2 hover:bg-blue-50 rounded-full transition-colors relative">
+<span class="material-symbols-outlined text-on-surface">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<div class="w-8 h-8 rounded-full bg-primary-container overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="Professional portrait of a middle-aged Indonesian man with a friendly expression, soft studio lighting, clean background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJ0SGSB4eRGSGnd_GUy7EqWvNyVDKqGAyBcdlY8J68u-gy7IBL_vN3NmpG8WIehWOkCiRfCTVyNtV9jU6iG1pDkg3TMDFuiu6EPO7cNzTCrS25_LwAJmFmz4ngL6rCvD03Bvw-zp2F4MZWulAXyuYy6XSS-T5Or2QnebRTD4-GTwfqHGMima6ZlOmZJYSzOpZO66YOG6uiyT1oUGPtH1xefypxERTXVwekfpU8WLJKRIYrjEZliOmwmgLcUMZZTaS5AHvG-oTZxdF6"/>
+</div>
+</div>
+</div>
+</header>
+<div class="flex min-h-screen pt-16">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-full w-64 z-40 bg-surface_container_low dark:bg-slate-900 flex flex-col pt-20 pb-6 px-4 gap-2">
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-blue-50 dark:hover:bg-slate-800/50 rounded-lg transition-all duration-300" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="text-sm font-medium tracking-wide uppercase">Beranda</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-blue-50 dark:hover:bg-slate-800/50 rounded-lg transition-all duration-300" href="#">
+<span class="material-symbols-outlined">description</span>
+<span class="text-sm font-medium tracking-wide uppercase">Dokumen Saya</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-blue-50 dark:hover:bg-slate-800/50 rounded-lg transition-all duration-300" href="#">
+<span class="material-symbols-outlined">send</span>
+<span class="text-sm font-medium tracking-wide uppercase">Kirim Dokumen</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-blue-50 dark:hover:bg-slate-800/50 rounded-lg transition-all duration-300" href="#">
+<span class="material-symbols-outlined">verified_user</span>
+<span class="text-sm font-medium tracking-wide uppercase">Verifikasi Identitas</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-white dark:bg-slate-800 text-[#0052CC] font-bold shadow-sm rounded-lg transition-all duration-300" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="text-sm font-medium tracking-wide uppercase">Profil</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-blue-50 dark:hover:bg-slate-800/50 rounded-lg transition-all duration-300" href="#">
+<span class="material-symbols-outlined">notifications</span>
+<span class="text-sm font-medium tracking-wide uppercase">Notifikasi</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-blue-50 dark:hover:bg-slate-800/50 rounded-lg transition-all duration-300" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="text-sm font-medium tracking-wide uppercase">Bantuan</span>
+</a>
+</nav>
+<div class="mt-auto px-4 py-4 bg-surface-container-highest/30 rounded-xl">
+<div class="flex items-center gap-3 mb-3">
+<div class="w-10 h-10 rounded-full overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="User avatar close up" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDd8e9SMbUtWNDMBMuTN-U3CWRTKLbegjBBMXXB62Ip9sqkHU5DtPBvon4o7vlEf9L1Ps-uj45rIpHDwVQlwiWAT2tGwqhHSi-E6N2v-S0E5i3wOlR6wfXcx_SFVoYrRMjLjHoQf1LpOrMDvurrH45SxT9cEhaiZQjnJWIFtz8B8JaC3rLVJqQcf-8YA62GJ9V2dAKQem1SkM-kGz94RpsWCUNIG3LwEsJ1DVhsl0yCvVdZOKq8I76IhkW8iyTmQ-Xzg5_Y4GzQjrCS"/>
+</div>
+<div>
+<p class="text-sm font-bold text-on-surface">Budi Santoso</p>
+<p class="text-xs text-slate-500">Verified Member</p>
+</div>
+</div>
+<button class="w-full py-2 bg-primary text-white text-xs font-bold rounded-lg hover:bg-primary-container transition-colors">
+                    Mulai Tanda Tangan
+                </button>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="ml-64 flex-1 p-8">
+<div class="max-w-5xl mx-auto">
+<header class="mb-10">
+<h1 class="text-3xl font-extrabold tracking-tight text-on-surface mb-2">Profil &amp; Pengaturan Akun</h1>
+<p class="text-on-surface-variant">Kelola identitas digital, keamanan, dan preferensi akun Anda dalam satu tempat.</p>
+</header>
+<!-- Navigation Tabs -->
+<div class="flex gap-8 border-b border-outline-variant/30 mb-10 overflow-x-auto">
+<button class="pb-4 text-[#0052CC] font-bold border-b-2 border-[#0052CC] whitespace-nowrap">Profil Saya</button>
+<button class="pb-4 text-on-surface-variant font-medium hover:text-primary transition-colors whitespace-nowrap">Keamanan</button>
+<button class="pb-4 text-on-surface-variant font-medium hover:text-primary transition-colors whitespace-nowrap">Notifikasi</button>
+<button class="pb-4 text-on-surface-variant font-medium hover:text-primary transition-colors whitespace-nowrap">Billing</button>
+<button class="pb-4 text-on-surface-variant font-medium hover:text-primary transition-colors whitespace-nowrap">API</button>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Profile Section (Left Column) -->
+<section class="lg:col-span-8 space-y-8">
+<!-- Profile Card -->
+<div class="bg-surface-container-lowest rounded-xl p-8 border border-outline-variant/20 shadow-sm relative overflow-hidden">
+<div class="absolute top-0 right-0 p-6">
+<button class="flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-lg font-bold text-sm hover:bg-primary hover:text-white transition-all">
+<span class="material-symbols-outlined text-sm">edit</span>
+                                    Edit Profil
+                                </button>
+</div>
+<div class="flex flex-col md:flex-row gap-8 items-start">
+<div class="relative group">
+<div class="w-32 h-32 rounded-2xl overflow-hidden shadow-md ring-4 ring-surface-container-low">
+<img class="w-full h-full object-cover" data-alt="User profile photo showing Budi Santoso, confident and professional" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjMIt-3ZQn_HuC8wur-_PQufcb-NDoiU1nGuAm8D-beho7k4uNNxBX91MPvEU0lIDlRPrkM8DgWOxsqwDGmEjiNUkqr_1KFJ4inKmgcA1XB4qdueTCELJsQ6J8VVVoDl6Ky8PghNSXwXLNHZ4GWz1aclDcTRaGOJKJomSy0of0rRMGaBUHYliQrhZwY3eVkad5XbqGfHIO7KyPNrPjkldsCrqGiNMAsC5tdFHaQ7OHA-W3rJqQ98UwEIn59_BKpucBO0ZZ_EXiQawm"/>
+</div>
+<button class="absolute -bottom-2 -right-2 bg-white p-2 rounded-full shadow-lg border border-outline-variant/30 text-primary">
+<span class="material-symbols-outlined text-lg">photo_camera</span>
+</button>
+</div>
+<div class="flex-1 space-y-6">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
+<div>
+<p class="text-xs font-bold text-outline uppercase tracking-widest mb-1">Nama Lengkap sesuai KTP</p>
+<p class="text-lg font-semibold text-on-surface">Budi Santoso</p>
+</div>
+<div>
+<p class="text-xs font-bold text-outline uppercase tracking-widest mb-1">Email Perusahaan</p>
+<p class="text-lg font-semibold text-on-surface">budi.santoso@secureid.id</p>
+</div>
+<div>
+<p class="text-xs font-bold text-outline uppercase tracking-widest mb-1">Nomor Handphone</p>
+<p class="text-lg font-semibold text-on-surface">+62 812 3456 7890</p>
+</div>
+<div>
+<p class="text-xs font-bold text-outline uppercase tracking-widest mb-1">SecureID Number</p>
+<div class="flex items-center gap-2">
+<p class="text-lg font-bold text-primary tracking-wider">SID-2024-9982-11</p>
+<span class="material-symbols-outlined text-secondary text-lg" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</div>
+</div>
+<div class="pt-6 border-t border-outline-variant/10">
+<div class="flex items-center gap-4 p-4 bg-surface-container-low rounded-lg">
+<span class="material-symbols-outlined text-primary text-3xl">badge</span>
+<div>
+<p class="text-sm font-bold text-on-surface">Status Verifikasi KYC</p>
+<p class="text-xs text-on-surface-variant">Terverifikasi penuh tingkat Level 3 sejak 12 Januari 2024</p>
+</div>
+<div class="ml-auto">
+<span class="px-3 py-1 bg-secondary/10 text-secondary text-xs font-bold rounded-full uppercase tracking-tighter">Aktif</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Security Quick Settings -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant/10">
+<div class="flex justify-between items-start mb-4">
+<span class="material-symbols-outlined text-primary text-2xl">lock_reset</span>
+<button class="text-primary text-xs font-bold hover:underline">Ganti Password</button>
+</div>
+<h3 class="font-bold mb-1">Kata Sandi</h3>
+<p class="text-sm text-on-surface-variant leading-relaxed">Terakhir diubah 3 bulan yang lalu. Gunakan kombinasi simbol untuk keamanan ekstra.</p>
+</div>
+<div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant/10">
+<div class="flex justify-between items-start mb-4">
+<span class="material-symbols-outlined text-primary text-2xl">vibration</span>
+<div class="w-12 h-6 bg-secondary/20 rounded-full relative cursor-pointer flex items-center">
+<div class="w-5 h-5 bg-secondary rounded-full absolute right-0.5"></div>
+</div>
+</div>
+<h3 class="font-bold mb-1">Otentikasi 2 Faktor</h3>
+<p class="text-sm text-on-surface-variant leading-relaxed">2FA Aktif melalui Google Authenticator. Melindungi akun Anda dari akses tidak sah.</p>
+</div>
+</div>
+<!-- Login History -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant/20 overflow-hidden shadow-sm">
+<div class="p-6 border-b border-outline-variant/10 flex justify-between items-center">
+<h3 class="font-bold">Riwayat Login Terakhir</h3>
+<button class="text-xs text-on-surface-variant hover:text-primary transition-colors">Lihat Semua</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-surface-container-low text-xs uppercase tracking-widest text-outline">
+<tr>
+<th class="px-6 py-4 font-bold">Perangkat &amp; Lokasi</th>
+<th class="px-6 py-4 font-bold">Alamat IP</th>
+<th class="px-6 py-4 font-bold">Waktu &amp; Tanggal</th>
+<th class="px-6 py-4 font-bold text-right">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10 text-sm">
+<tr class="hover:bg-blue-50/30 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant">laptop_mac</span>
+<div>
+<p class="font-semibold">Chrome on macOS</p>
+<p class="text-xs text-on-surface-variant">Jakarta, Indonesia</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 font-mono text-xs">182.253.111.42</td>
+<td class="px-6 py-4 text-on-surface-variant">Hari ini, 14:22</td>
+<td class="px-6 py-4 text-right">
+<span class="text-secondary font-bold text-xs">Sesi Aktif</span>
+</td>
+</tr>
+<tr class="hover:bg-blue-50/30 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant">smartphone</span>
+<div>
+<p class="font-semibold">iPhone 15 Pro</p>
+<p class="text-xs text-on-surface-variant">Bandung, Indonesia</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 font-mono text-xs">110.138.74.201</td>
+<td class="px-6 py-4 text-on-surface-variant">22 Okt 2024, 09:15</td>
+<td class="px-6 py-4 text-right">
+<span class="text-on-surface-variant font-bold text-xs">Berhasil</span>
+</td>
+</tr>
+<tr class="hover:bg-blue-50/30 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant">language</span>
+<div>
+<p class="font-semibold">Safari on iPad</p>
+<p class="text-xs text-on-surface-variant">Jakarta, Indonesia</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 font-mono text-xs">182.253.111.42</td>
+<td class="px-6 py-4 text-on-surface-variant">19 Okt 2024, 18:45</td>
+<td class="px-6 py-4 text-right">
+<span class="text-on-surface-variant font-bold text-xs">Berhasil</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<!-- Sidebar Info (Right Column) -->
+<aside class="lg:col-span-4 space-y-6">
+<!-- Membership Status Card -->
+<div class="bg-primary p-6 rounded-xl text-white relative overflow-hidden group">
+<div class="absolute -right-8 -top-8 w-32 h-32 bg-white/10 rounded-full blur-3xl group-hover:bg-white/20 transition-all duration-500"></div>
+<div class="relative z-10">
+<span class="px-2 py-1 bg-white/20 rounded text-[10px] font-bold uppercase tracking-widest">Enterprise Plan</span>
+<h4 class="text-xl font-bold mt-3 mb-1">Paket Tahunan Premium</h4>
+<p class="text-sm text-primary-fixed opacity-90">Sisa 4.250 kuota tanda tangan elektronik</p>
+<div class="mt-6 space-y-3">
+<div class="h-1.5 w-full bg-white/20 rounded-full overflow-hidden">
+<div class="h-full bg-secondary-fixed w-[85%] rounded-full"></div>
+</div>
+<div class="flex justify-between text-[10px] font-bold">
+<span>PENGGUNAAN 85%</span>
+<span>RENEWAL: JAN 2025</span>
+</div>
+</div>
+<button class="w-full mt-6 py-3 bg-white text-primary font-bold rounded-lg text-sm hover:bg-on-primary-container transition-colors">
+                                    Upgrade Kapasitas
+                                </button>
+</div>
+</div>
+<!-- Help Card -->
+<div class="bg-surface-container-high p-6 rounded-xl border border-outline-variant/10">
+<div class="flex items-center gap-3 mb-4">
+<div class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">support_agent</span>
+</div>
+<h4 class="font-bold">Butuh Bantuan?</h4>
+</div>
+<p class="text-sm text-on-surface-variant mb-4 leading-relaxed">Manager akun Anda siap membantu proses verifikasi atau kendala teknis lainnya.</p>
+<a class="flex items-center gap-2 text-primary font-bold text-sm group" href="#">
+                                Hubungi Support
+                                <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</a>
+</div>
+<!-- Signature Sample -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/20">
+<h4 class="text-xs font-bold text-outline uppercase tracking-widest mb-4">Tanda Tangan Terdaftar</h4>
+<div class="aspect-[16/9] bg-surface-container-low rounded-lg border-2 border-dashed border-outline-variant/30 flex items-center justify-center relative overflow-hidden group">
+<div class="absolute inset-0 opacity-[0.03] pointer-events-none" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAAFKsAi90uAemXnmuv22g9ASVzERH4Yzjd2XrFR07dyl-uorU0tQMmaqBmjf-R0mYV-iMkvkzLLSDnP60Hn3jhu1E9MuJVEGnLEOD4WTuagdH5Q6wnEbjX3AX4Zufnc4RDUSA6ow6HIoKc64Tm76Vm7q5V5Dwb_ocGw0bVZjKRIFOjfS6PXWmVnt97dimZ6Xif9VgLPtv2-jWaI8nKraF98ZTf3hHyofRSryedMhfxAAJMUdutIc1P2t3kXmqyhZwvViRZpHQsM6GN');"></div>
+<span class="material-symbols-outlined text-5xl text-primary opacity-30 select-none">draw</span>
+<div class="absolute inset-0 bg-white/0 group-hover:bg-white/40 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300">
+<button class="bg-white px-4 py-2 rounded-lg shadow-lg font-bold text-xs text-primary border border-outline-variant/20">Ubah Tanda Tangan</button>
+</div>
+</div>
+<p class="text-[10px] text-center mt-3 text-on-surface-variant italic">Digunakan untuk dokumen legal dengan sertifikat digital Elektronik</p>
+</div>
+</aside>
+</div>
+</div>
+</main>
+</div>
+<!-- Footer -->
+<footer class="w-full border-t border-slate-100 dark:border-slate-800 bg-surface dark:bg-slate-950 font-['Inter']">
+<div class="flex justify-between items-center px-8 py-6 ml-64">
+<p class="text-xs text-slate-500">Copyright 2026 PT SecureID Indonesia</p>
+<div class="flex gap-6">
+<a class="text-xs text-slate-500 hover:text-[#0052CC] transition-colors" href="#">Privacy</a>
+<a class="text-xs text-slate-500 hover:text-[#0052CC] transition-colors" href="#">Terms</a>
+<a class="text-xs text-slate-500 hover:text-[#0052CC] transition-colors" href="#">Contact</a>
+</div>
+</div>
+</footer>
+</body></html>

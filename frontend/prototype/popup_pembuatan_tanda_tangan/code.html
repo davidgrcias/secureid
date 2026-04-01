@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+
+<html class="light" lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "background": "#f8f9ff",
+                        "on-error": "#ffffff",
+                        "tertiary": "#35445a",
+                        "secondary-fixed-dim": "#3ce36a",
+                        "primary-container": "#0052cc",
+                        "on-primary-container": "#c4d2ff",
+                        "surface-container-high": "#dee9fc",
+                        "secondary-container": "#5cfd80",
+                        "tertiary-fixed-dim": "#b7c8e1",
+                        "primary": "#003d9b",
+                        "on-secondary-fixed-variant": "#00531e",
+                        "on-primary-fixed": "#001848",
+                        "inverse-surface": "#26313f",
+                        "primary-fixed": "#dae2ff",
+                        "surface-bright": "#f8f9ff",
+                        "tertiary-fixed": "#d3e4fe",
+                        "on-surface": "#111c2a",
+                        "on-tertiary-fixed": "#0b1c30",
+                        "on-error-container": "#93000a",
+                        "secondary-fixed": "#69ff87",
+                        "on-primary-fixed-variant": "#0040a2",
+                        "surface-container": "#e5eeff",
+                        "primary-fixed-dim": "#b2c5ff",
+                        "inverse-primary": "#b2c5ff",
+                        "tertiary-container": "#4c5c72",
+                        "on-primary": "#ffffff",
+                        "on-surface-variant": "#434654",
+                        "on-tertiary-fixed-variant": "#38485d",
+                        "outline-variant": "#c3c6d6",
+                        "outline": "#737685",
+                        "surface-container-low": "#eff4ff",
+                        "secondary": "#006e2a",
+                        "error": "#ba1a1a",
+                        "on-secondary-container": "#00732c",
+                        "surface": "#f8f9ff",
+                        "on-secondary-fixed": "#002108",
+                        "surface-container-highest": "#d8e3f6",
+                        "surface-variant": "#d8e3f6",
+                        "surface-container-lowest": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-tertiary": "#ffffff",
+                        "inverse-on-surface": "#eaf1ff",
+                        "surface-tint": "#0c56d0",
+                        "on-background": "#111c2a",
+                        "on-tertiary-container": "#c4d4ee",
+                        "on-secondary": "#ffffff",
+                        "surface-dim": "#cfdbee"
+                    },
+                    fontFamily: {
+                        "headline": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .signature-font-1 { font-family: 'Dancing Script', cursive; font-size: 1.5rem; }
+        .signature-font-2 { font-family: 'Great Vibes', cursive; font-size: 1.5rem; }
+        .signature-font-3 { font-family: 'Sacramento', cursive; font-size: 1.5rem; }
+        .signature-font-4 { font-family: 'Yellowtail', cursive; font-size: 1.5rem; }
+    </style>
+<!-- Importing specific script fonts for signature previews -->
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script&amp;family=Great+Vibes&amp;family=Sacramento&amp;family=Yellowtail&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+</head>
+<body class="bg-surface-dim font-body text-on-surface antialiased">
+<!-- Background Context (Blurred Signing Page) -->
+<div class="fixed inset-0 z-0 flex flex-col pointer-events-none filter blur-[4px]">
+<header class="bg-white/80 backdrop-blur-xl h-16 flex items-center justify-between px-6 shadow-sm border-b border-outline-variant/10">
+<span class="text-xl font-bold text-primary tracking-tight">SecureID V2</span>
+<div class="flex items-center gap-4">
+<div class="w-8 h-8 rounded-full bg-surface-container"></div>
+</div>
+</header>
+<main class="flex-1 p-8 max-w-4xl mx-auto w-full">
+<div class="bg-surface-container-lowest rounded-xl p-12 shadow-sm min-h-[800px] flex flex-col items-center">
+<div class="w-full h-8 bg-surface-container-low mb-6 rounded"></div>
+<div class="w-3/4 h-4 bg-surface-container-low mb-4 rounded"></div>
+<div class="w-full h-4 bg-surface-container-low mb-4 rounded"></div>
+<div class="mt-auto border-2 border-dashed border-outline-variant rounded-lg p-12 w-64 h-32 flex items-center justify-center text-outline">
+                    Signature Area
+                </div>
+</div>
+</main>
+</div>
+<!-- Modal Backdrop -->
+<div class="fixed inset-0 z-50 bg-on-surface/40 backdrop-blur-sm flex items-center justify-center p-4">
+<!-- Signature Creation Modal -->
+<div class="bg-surface-container-lowest w-full max-w-2xl rounded-xl shadow-[0px_4px_20px_rgba(17,28,42,0.12)] overflow-hidden flex flex-col">
+<!-- Modal Header -->
+<div class="px-8 pt-8 pb-4">
+<div class="flex items-center justify-between mb-6">
+<h2 class="text-2xl font-bold tracking-tight text-on-surface">Buat Tanda Tangan</h2>
+<button class="p-2 hover:bg-surface-container rounded-full transition-colors duration-200">
+<span class="material-symbols-outlined text-outline">close</span>
+</button>
+</div>
+<!-- Tabs -->
+<div class="flex gap-8 border-b border-outline-variant/30">
+<button class="pb-3 text-sm font-semibold text-primary border-b-2 border-primary transition-all">Gambar</button>
+<button class="pb-3 text-sm font-medium text-outline hover:text-on-surface-variant transition-all">Ketik</button>
+<button class="pb-3 text-sm font-medium text-outline hover:text-on-surface-variant transition-all">Unggah</button>
+</div>
+</div>
+<!-- Modal Body (Draw Tab Active) -->
+<div class="px-8 py-4 flex-1">
+<!-- Tool Bar -->
+<div class="flex items-center justify-between mb-4 px-2">
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2">
+<span class="text-xs font-label text-outline uppercase tracking-wider">Warna:</span>
+<div class="flex gap-1.5">
+<button class="w-5 h-5 rounded-full bg-on-surface border-2 border-primary-container ring-2 ring-primary/20"></button>
+<button class="w-5 h-5 rounded-full bg-blue-700 hover:scale-110 transition-transform"></button>
+<button class="w-5 h-5 rounded-full bg-red-700 hover:scale-110 transition-transform"></button>
+</div>
+</div>
+<div class="h-4 w-px bg-outline-variant/40"></div>
+<div class="flex items-center gap-2">
+<span class="text-xs font-label text-outline uppercase tracking-wider">Ketebalan:</span>
+<div class="flex items-center gap-3">
+<span class="w-2 h-2 rounded-full bg-outline"></span>
+<input class="w-24 h-1 bg-surface-container rounded-lg appearance-none cursor-pointer accent-primary" type="range"/>
+<span class="w-4 h-4 rounded-full bg-outline"></span>
+</div>
+</div>
+</div>
+<button class="flex items-center gap-2 text-sm font-medium text-error hover:bg-error-container/20 px-3 py-1.5 rounded-lg transition-colors">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+                        Bersihkan
+                    </button>
+</div>
+<!-- Canvas Area -->
+<div class="relative group">
+<div class="w-full aspect-[21/9] bg-surface-container-low rounded-xl border border-outline-variant/20 overflow-hidden cursor-crosshair flex items-center justify-center">
+<!-- Decorative Watermark -->
+<span class="absolute inset-0 flex items-center justify-center opacity-[0.03] select-none pointer-events-none">
+<span class="text-9xl font-bold tracking-tighter">SECUREID</span>
+</span>
+<!-- Placeholder Stroke for "Signature" feel -->
+<div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+<img alt="mock signature stroke" class="opacity-20 grayscale" data-alt="a minimalist elegant brush stroke representing a signature in black ink over a light background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBinEz6_9_7uuap-c3EkLxKOS4A3s-KDLlmmUXe0FxCjOuyXRNFyjeCAEKyRoChE28fLkfYgqhj7__UxpKcEh92k7ckNNFMBReKfPyegDUt3JK2i8zTq-Yk1K6cMCw8ld1C3B3y_oA0hNpkl2v6ygRoGED62O--SzdzYJYVjyMNnB0xL3Y5Fe5Ra2bRiEwplyx6QJR8VgHxQVq3J5nO9QPH0Matnci9tNWMtCBzz0lsLUaHtYdHnq9es-1X9qPKYTReY8RoBqUj8daN"/>
+</div>
+<p class="text-outline/40 text-sm italic z-10">Gambar tanda tangan Anda di sini</p>
+</div>
+<!-- Guide Line -->
+<div class="absolute bottom-12 left-12 right-12 h-px bg-outline-variant/30"></div>
+</div>
+<!-- Compliance Note -->
+<div class="mt-6 flex gap-3 p-4 bg-surface-container-low/50 rounded-lg">
+<span class="material-symbols-outlined text-primary text-[20px]">verified_user</span>
+<p class="text-xs leading-relaxed text-on-surface-variant/80">
+                        Dengan menekan tombol "Gunakan Tanda Tangan Ini", saya menyatakan bahwa tanda tangan elektronik ini adalah representasi sah dari identitas saya untuk dokumen ini sesuai dengan UU ITE.
+                    </p>
+</div>
+</div>
+<!-- Modal Footer -->
+<div class="px-8 py-8 flex items-center justify-end gap-4 bg-surface-container-lowest">
+<button class="px-6 py-2.5 text-sm font-semibold text-tertiary hover:bg-surface-container rounded-lg transition-all duration-300">
+                    Batal
+                </button>
+<button class="px-8 py-2.5 text-sm font-semibold text-on-primary bg-primary rounded-lg shadow-sm hover:shadow-md hover:bg-primary-container transition-all duration-300 flex items-center gap-2">
+                    Gunakan Tanda Tangan Ini
+                    <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Hidden Ketik Section (For reference of how it would look) -->
+<div class="hidden">
+<div class="space-y-6">
+<div class="relative">
+<label class="absolute -top-2.5 left-4 px-1 bg-surface-container-lowest text-xs font-medium text-primary">Masukkan Nama</label>
+<input class="w-full px-4 py-4 bg-surface-container-lowest border border-outline-variant rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" type="text" value="Ahmad Subarjo"/>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="p-6 border border-outline-variant/40 rounded-xl hover:border-primary/40 hover:bg-primary/5 cursor-pointer transition-all flex items-center justify-center min-h-[100px]">
+<span class="signature-font-1 text-on-surface">Ahmad Subarjo</span>
+</div>
+<div class="p-6 border border-outline-variant/40 rounded-xl hover:border-primary/40 hover:bg-primary/5 cursor-pointer transition-all flex items-center justify-center min-h-[100px]">
+<span class="signature-font-2 text-on-surface">Ahmad Subarjo</span>
+</div>
+<div class="p-6 border border-outline-variant/40 rounded-xl hover:border-primary/40 hover:bg-primary/5 cursor-pointer transition-all flex items-center justify-center min-h-[100px]">
+<span class="signature-font-3 text-on-surface">Ahmad Subarjo</span>
+</div>
+<div class="p-6 border border-outline-variant/40 rounded-xl hover:border-primary/40 hover:bg-primary/5 cursor-pointer transition-all flex items-center justify-center min-h-[100px]">
+<span class="signature-font-4 text-on-surface">Ahmad Subarjo</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Hidden Unggah Section (For reference) -->
+<div class="hidden">
+<div class="border-2 border-dashed border-outline-variant/50 rounded-2xl bg-surface-container-low/30 p-12 flex flex-col items-center justify-center gap-4 hover:border-primary transition-colors cursor-pointer">
+<div class="w-16 h-16 rounded-full bg-primary-container/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-4xl">cloud_upload</span>
+</div>
+<div class="text-center">
+<p class="font-semibold text-on-surface">Klik untuk unggah atau seret file</p>
+<p class="text-sm text-outline mt-1">PNG, JPG (Maks. 2MB). Gunakan latar belakang transparan untuk hasil terbaik.</p>
+</div>
+</div>
+</div>
+</body></html>

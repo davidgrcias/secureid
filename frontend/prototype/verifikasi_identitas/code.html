@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+
+<html class="light" lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SecureID - Verifikasi Identitas (e-KYC)</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "inverse-surface": "#26313f",
+              "background": "#f8f9ff",
+              "inverse-on-surface": "#eaf1ff",
+              "tertiary": "#35445a",
+              "surface-container-high": "#dee9fc",
+              "secondary": "#006e2a",
+              "on-surface": "#111c2a",
+              "surface-tint": "#0c56d0",
+              "error-container": "#ffdad6",
+              "on-error-container": "#93000a",
+              "secondary-fixed": "#69ff87",
+              "surface": "#f8f9ff",
+              "outline": "#737685",
+              "inverse-primary": "#b2c5ff",
+              "secondary-fixed-dim": "#3ce36a",
+              "on-surface-variant": "#434654",
+              "on-primary-container": "#c4d2ff",
+              "tertiary-container": "#4c5c72",
+              "on-secondary-fixed": "#002108",
+              "on-error": "#ffffff",
+              "surface-variant": "#d8e3f6",
+              "tertiary-fixed-dim": "#b7c8e1",
+              "on-tertiary": "#ffffff",
+              "on-secondary": "#ffffff",
+              "on-secondary-container": "#00732c",
+              "surface-dim": "#cfdbee",
+              "primary-container": "#0052cc",
+              "on-primary": "#ffffff",
+              "on-primary-fixed": "#001848",
+              "on-tertiary-fixed": "#0b1c30",
+              "on-background": "#111c2a",
+              "primary-fixed-dim": "#b2c5ff",
+              "primary": "#003d9b",
+              "surface-container-low": "#eff4ff",
+              "surface-bright": "#f8f9ff",
+              "on-primary-fixed-variant": "#0040a2",
+              "error": "#ba1a1a",
+              "secondary-container": "#5cfd80",
+              "primary-fixed": "#dae2ff",
+              "surface-container-lowest": "#ffffff",
+              "on-tertiary-container": "#c4d4ee",
+              "on-tertiary-fixed-variant": "#38485d",
+              "surface-container": "#e5eeff",
+              "on-secondary-fixed-variant": "#00531e",
+              "tertiary-fixed": "#d3e4fe",
+              "outline-variant": "#c3c6d6",
+              "surface-container-highest": "#d8e3f6"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .tonal-layering {
+            background: linear-gradient(135deg, #f8f9ff 0%, #eff4ff 100%);
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9ff;
+            color: #111c2a;
+        }
+    </style>
+</head>
+<body class="antialiased">
+<!-- TopNavBar Shell -->
+<nav class="fixed top-0 w-full z-50 border-b-0 bg-surface/80 backdrop-blur-lg shadow-sm font-['Inter'] antialiased">
+<div class="flex justify-between items-center px-6 py-3 w-full">
+<div class="flex items-center gap-8">
+<span class="text-2xl font-black tracking-tight text-[#111c2a]">SecureID</span>
+<div class="hidden md:flex gap-6 items-center">
+<a class="text-[#111c2a] text-sm font-medium hover:bg-blue-50 transition-colors px-3 py-2 rounded-lg" href="#">Beranda</a>
+<a class="text-[#0052CC] font-bold border-b-2 border-[#0052CC] text-sm px-1 py-2" href="#">Verifikasi Identitas</a>
+<a class="text-[#111c2a] text-sm font-medium hover:bg-blue-50 transition-colors px-3 py-2 rounded-lg" href="#">Bantuan</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-on-surface-variant p-2 hover:bg-blue-50 rounded-full transition-colors" data-icon="notifications">notifications</button>
+<div class="h-10 w-10 rounded-full overflow-hidden bg-surface-container-high">
+<img alt="User Profile Avatar" class="w-full h-full object-cover" data-alt="portrait of a professional asian man in a clean office setting, soft natural lighting, high resolution profile picture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBa3C-PRgckJ-Wov4k8F9Vf7bxLsCWM9rp93H-AGl68B2ZALeliMnsSvgpKus1BA9DYyw-YpTMerQ_bcylDm8ki7XOKeV3sdsqx3I8utk0r265hUS3cRW9gE7KOoSgnvjiTtvS98ZgGQshGn0GWbhUigKk86l8jpCRXFe6itFXob2bOrUn7IOJq8KlmmBFwhFbjaoriNAUjfaT5mXztBL4HqvFLmIyC6hqVNBas4To5Apdm2a1KHu5SztV-NMtWrkarsVvyacW6qdDy"/>
+</div>
+</div>
+</div>
+</nav>
+<!-- SideNavBar Shell (Suppressed on focused KYC page based on "The Destination Rule" - prioritized content canvas) -->
+<main class="pt-24 pb-20 px-6 max-w-[1440px] mx-auto min-h-screen">
+<!-- Header & Progress Section -->
+<div class="max-w-3xl mx-auto mb-12 text-center">
+<h1 class="text-3xl font-extrabold tracking-tight text-on-surface mb-2">Verifikasi Identitas Anda</h1>
+<p class="text-on-surface-variant mb-8">Lengkapi langkah-langkah di bawah ini untuk mengamankan akun dan mengaktifkan fitur tanda tangan elektronik.</p>
+<!-- Step Indicator -->
+<div class="relative flex items-center justify-between mb-2">
+<div class="absolute top-1/2 left-0 w-full h-0.5 bg-surface-container-high -translate-y-1/2 z-0"></div>
+<div class="absolute top-1/2 left-0 w-1/2 h-0.5 bg-primary-container -translate-y-1/2 z-0"></div>
+<div class="z-10 bg-primary-container text-on-primary w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm">1</div>
+<div class="z-10 bg-surface-container-highest text-primary w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm">2</div>
+<div class="z-10 bg-surface-container-highest text-on-surface-variant w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm">3</div>
+</div>
+<div class="flex justify-between text-[10px] uppercase tracking-widest font-bold text-on-surface-variant px-1">
+<span>Upload e-KTP</span>
+<span>Selfie &amp; Liveness</span>
+<span>Konfirmasi</span>
+</div>
+</div>
+<!-- Main Content Area -->
+<div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+<!-- Left: Upload Section -->
+<div class="md:col-span-7 space-y-6">
+<!-- Card 1: KTP Front -->
+<div class="bg-surface-container-lowest rounded-xl p-8 border border-outline-variant/20 shadow-sm">
+<div class="flex items-center justify-between mb-6">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="id_card">id_card</span>
+<h3 class="text-lg font-bold">Foto Depan e-KTP</h3>
+</div>
+<span class="text-xs font-bold bg-secondary/10 text-secondary px-3 py-1 rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="check_circle" data-weight="fill" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                            Tersedia
+                        </span>
+</div>
+<div class="aspect-[1.6/1] bg-surface-container rounded-lg border-2 border-dashed border-outline-variant flex flex-col items-center justify-center gap-4 group cursor-pointer hover:border-primary-container transition-colors relative overflow-hidden">
+<img alt="e-KTP Placeholder" class="absolute inset-0 w-full h-full object-cover opacity-10" data-alt="a blurred Indonesian identity card e-KTP mockup showing holographic details and blue patterns on a clean background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBF8kiQQ_2rLlUeoo1iBgJJm-JqTVzjC7p5Za4-gHbwq55VNoKH0odYXk-1JTl4A8KlBviXdaavTk9TtcAQY2ZGranfX8SNEFGUvk9eEYgdaEKhR9_Vgaql6yXZxuU4lY8Zwaf6aEvYii94h4uKQraXcOauYqE4X80KnJB6ar_SQLwHsd5DExc9N5EOZSuyKRoOTQcMQrydBT-Wdd9Qqr5tOvltUb_Vq4pblaODeGHp19NPaf96I8wQBfLETtrWtPw2c6SWE7av_oFi"/>
+<span class="material-symbols-outlined text-4xl text-outline group-hover:text-primary-container transition-colors" data-icon="add_a_photo">add_a_photo</span>
+<div class="text-center">
+<p class="font-bold text-on-surface">Ambil Foto atau Upload</p>
+<p class="text-xs text-on-surface-variant">Pastikan NIK dan Foto terlihat jelas</p>
+</div>
+</div>
+</div>
+<!-- Card 2: KTP Back -->
+<div class="bg-surface-container-lowest rounded-xl p-8 border border-outline-variant/20 shadow-sm opacity-60">
+<div class="flex items-center justify-between mb-6">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant text-3xl" data-icon="id_card">id_card</span>
+<h3 class="text-lg font-bold">Foto Belakang e-KTP</h3>
+</div>
+<span class="text-xs font-bold text-on-surface-variant">Opsional</span>
+</div>
+<div class="aspect-[1.6/1] bg-surface-container rounded-lg border-2 border-dashed border-outline-variant flex flex-col items-center justify-center gap-4">
+<span class="material-symbols-outlined text-4xl text-outline" data-icon="upload_file">upload_file</span>
+<p class="font-bold text-on-surface-variant">Klik untuk mengunggah</p>
+</div>
+</div>
+</div>
+<!-- Right: Instructions & Sidebar -->
+<div class="md:col-span-5 space-y-6">
+<!-- Status Card -->
+<div class="bg-primary/5 rounded-xl p-6 border border-primary/10">
+<div class="flex items-center gap-4 mb-4">
+<div class="w-12 h-12 rounded-full bg-secondary text-on-secondary flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="verified" data-weight="fill" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<div>
+<p class="text-xs font-bold text-primary uppercase tracking-widest">Status Akun</p>
+<h4 class="text-lg font-bold text-on-surface">Verified ✓</h4>
+</div>
+</div>
+<p class="text-sm text-on-surface-variant leading-relaxed">Verifikasi terakhir dilakukan pada 12 Feb 2026. Lakukan verifikasi ulang jika ada perubahan data KTP.</p>
+</div>
+<!-- Guide Card -->
+<div class="bg-surface-container-low rounded-xl p-6">
+<h3 class="font-bold text-sm uppercase tracking-wider mb-6 text-on-surface-variant">Panduan Liveness Check</h3>
+<div class="space-y-6">
+<div class="flex gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-icon="light_mode">light_mode</span>
+</div>
+<div>
+<p class="text-sm font-bold mb-1">Cahaya Cukup</p>
+<p class="text-xs text-on-surface-variant">Pastikan wajah Anda terkena cahaya yang cukup dan tidak membelakangi lampu.</p>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-icon="face_retouching_off">face_retouching_off</span>
+</div>
+<div>
+<p class="text-sm font-bold mb-1">Tanpa Aksesoris</p>
+<p class="text-xs text-on-surface-variant">Lepaskan kacamata hitam, masker, atau topi agar wajah terdeteksi sempurna.</p>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-icon="center_focus_strong">center_focus_strong</span>
+</div>
+<div>
+<p class="text-sm font-bold mb-1">Posisi Tengah</p>
+<p class="text-xs text-on-surface-variant">Posisikan wajah tepat di dalam bingkai oval yang disediakan nantinya.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- CTA Section -->
+<div class="pt-4">
+<button class="w-full bg-primary-container text-on-primary py-4 rounded-xl font-bold text-lg shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all duration-300 ease-out flex items-center justify-center gap-2">
+                        Verifikasi Sekarang
+                        <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</button>
+<p class="text-center text-[10px] text-on-surface-variant mt-4 px-4 leading-normal">
+                        Dengan menekan tombol di atas, Anda menyetujui Kebijakan Privasi SecureID dalam pemrosesan data biometrik untuk keperluan e-KYC.
+                    </p>
+</div>
+</div>
+</div>
+<!-- Security Badge Section -->
+<div class="mt-20 flex flex-wrap justify-center items-center gap-12 opacity-40 grayscale hover:grayscale-0 transition-all duration-500">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-3xl" data-icon="shield_with_heart">shield_with_heart</span>
+<span class="font-bold text-sm tracking-tighter">OJK Terdaftar</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-3xl" data-icon="lock">lock</span>
+<span class="font-bold text-sm tracking-tighter">ISO 27001 Certified</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-3xl" data-icon="security">security</span>
+<span class="font-bold text-sm tracking-tighter">AES-256 Encryption</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-3xl" data-icon="gavel">gavel</span>
+<span class="font-bold text-sm tracking-tighter">Legalitas UU ITE</span>
+</div>
+</div>
+</main>
+<!-- Footer Shell -->
+<footer class="w-full border-t border-slate-100 bg-surface dark:bg-slate-950">
+<div class="flex justify-between items-center px-8 py-6 w-full max-w-[1440px] mx-auto">
+<p class="text-xs text-slate-500 font-['Inter']">Copyright 2026 PT SecureID Indonesia</p>
+<div class="flex gap-6">
+<a class="text-xs text-slate-500 hover:text-[#0052CC] transition-colors" href="#">Privacy</a>
+<a class="text-xs text-slate-500 hover:text-[#0052CC] transition-colors" href="#">Terms</a>
+<a class="text-xs text-slate-500 hover:text-[#0052CC] transition-colors" href="#">Contact</a>
+</div>
+</div>
+</footer>
+</body></html>

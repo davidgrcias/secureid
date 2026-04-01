@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Calendar,
   CheckSquare,
@@ -10,7 +10,13 @@ import {
   UploadCloud,
   X
 } from "lucide-react";
-import { createEnvelope, saveEnvelopeFields, sendEnvelope, uploadDocument } from "@/lib/workflow";
+import {
+  archiveDocument,
+  createEnvelope,
+  saveEnvelopeFields,
+  sendEnvelope,
+  uploadDocument
+} from "@/lib/workflow";
 
 type RecipientRole = "signer" | "viewer" | "approver";
 type FieldType = "signature" | "initial" | "date" | "text" | "checkbox";
@@ -37,6 +43,12 @@ type DraftField = {
   positionY: number;
   width: number;
   height: number;
+};
+
+type DraggingState = {
+  fieldId: string;
+  offsetX: number;
+  offsetY: number;
 };
 
 const fieldLibrary: Array<{ fieldType: FieldType; label: string; icon: React.ComponentType<{ className?: string }> }> = [
@@ -69,10 +81,66 @@ export default function SendPage() {
   const [documentId, setDocumentId] = useState<string | null>(null);
   const [fields, setFields] = useState<DraftField[]>([]);
   const [selectedFieldType, setSelectedFieldType] = useState<FieldType>("signature");
+  const [dragging, setDragging] = useState<DraggingState | null>(null);
+
+  const canvasRef = useRef<HTMLDivElement | null>(null);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!dragging) {
+      return;
+    }
+
+    const activeDragging = dragging;
+
+    function onMouseMove(event: MouseEvent): void {
+      const canvas = canvasRef.current;
+      if (!canvas) {
+        return;
+      }
+
+      const rect = canvas.getBoundingClientRect();
+      const pointerX = event.clientX - rect.left;
+      const pointerY = event.clientY - rect.top;
+
+      setFields((current) =>
+        current.map((field) => {
+          if (field.id !== activeDragging.fieldId) {
+            return field;
+          }
+
+          const widthPx = (field.width / 100) * rect.width;
+          const heightPx = (field.height / 100) * rect.height;
+          const rawLeft = pointerX - activeDragging.offsetX;
+          const rawTop = pointerY - activeDragging.offsetY;
+
+          const clampedLeft = Math.min(Math.max(rawLeft, 0), Math.max(rect.width - widthPx, 0));
+          const clampedTop = Math.min(Math.max(rawTop, 0), Math.max(rect.height - heightPx, 0));
+
+          return {
+            ...field,
+            positionX: (clampedLeft / rect.width) * 100,
+            positionY: (clampedTop / rect.height) * 100
+          };
+        })
+      );
+    }
+
+    function onMouseUp(): void {
+      setDragging(null);
+    }
+
+    window.addEventListener("mousemove", onMouseMove);
+    window.addEventListener("mouseup", onMouseUp);
+
+    return () => {
+      window.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("mouseup", onMouseUp);
+    };
+  }, [dragging]);
 
   const canProceedToBuilder = useMemo(() => {
     const hasSignerRecipient = recipients.some((recipient) => recipient.role === "signer");
@@ -116,11 +184,32 @@ export default function SendPage() {
     });
   }
 
+  function startDragging(field: DraftField, event: React.MouseEvent<HTMLDivElement>): void {
+    const canvas = canvasRef.current;
+    if (!canvas) {
+      return;
+    }
+
+    const rect = canvas.getBoundingClientRect();
+    const pointerX = event.clientX - rect.left;
+    const pointerY = event.clientY - rect.top;
+    const fieldLeft = (field.positionX / 100) * rect.width;
+    const fieldTop = (field.positionY / 100) * rect.height;
+
+    setDragging({
+      fieldId: field.id,
+      offsetX: pointerX - fieldLeft,
+      offsetY: pointerY - fieldTop
+    });
+  }
+
   async function handleProceedToBuilder(): Promise<void> {
     if (!file || !canProceedToBuilder) {
       setErrorMessage("Lengkapi judul, file, dan data penerima, serta pastikan ada minimal satu signer.");
       return;
     }
+
+    let uploadedDocumentId: string | null = null;
 
     try {
       setIsSubmitting(true);
@@ -132,6 +221,7 @@ export default function SendPage() {
         title,
         description
       });
+      uploadedDocumentId = uploadedDocument.id;
 
       const createdEnvelope = await createEnvelope({
         documentId: uploadedDocument.id,
@@ -151,6 +241,14 @@ export default function SendPage() {
       setStep(1);
     } catch {
       setErrorMessage("Gagal membuat draft pengiriman dokumen.");
+
+      if (uploadedDocumentId) {
+        try {
+          await archiveDocument(uploadedDocumentId);
+        } catch {
+          // Best effort cleanup for uploaded draft documents.
+        }
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -364,7 +462,10 @@ export default function SendPage() {
           <article className="rounded-3xl bg-surface-container-lowest p-5 xl:col-span-6">
             <h3 className="text-sm font-bold uppercase tracking-[0.08em] text-on-surface-variant">Annotation Studio</h3>
             <div className="mt-4 min-h-[560px] rounded-2xl border border-dashed border-outline-variant/40 bg-surface-container-low p-6">
-              <div className="relative mx-auto h-[500px] max-w-xl rounded-xl bg-white shadow-[0_16px_40px_rgba(17,28,42,0.08)]">
+              <div
+                ref={canvasRef}
+                className="relative mx-auto h-[500px] max-w-xl rounded-xl bg-white shadow-[0_16px_40px_rgba(17,28,42,0.08)]"
+              >
                 {fields.length === 0 ? (
                   <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-on-surface-variant">
                     <p className="text-lg font-bold text-on-surface">Belum ada field ditempatkan</p>
@@ -374,13 +475,14 @@ export default function SendPage() {
                   fields.map((field) => (
                     <div
                       key={field.id}
-                      className="absolute rounded-lg border-2 border-dashed border-primary bg-primary/5 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.06em] text-primary"
+                      className="absolute cursor-move rounded-lg border-2 border-dashed border-primary bg-primary/5 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.06em] text-primary"
                       style={{
                         left: `${field.positionX}%`,
                         top: `${field.positionY}%`,
                         width: `${field.width}%`,
                         height: `${field.height}%`
                       }}
+                      onMouseDown={(event) => startDragging(field, event)}
                     >
                       {field.fieldType}
                     </div>

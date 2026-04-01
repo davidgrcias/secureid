@@ -8,6 +8,28 @@ type RetryableAxiosRequestConfig = InternalAxiosRequestConfig & {
   _retry?: boolean;
 };
 
+type RefreshPayload = {
+  user: NonNullable<ReturnType<typeof useAuthStore.getState>["user"]>;
+  tokens: { accessToken: string; refreshToken: string };
+};
+
+let refreshRequest: Promise<RefreshPayload> | null = null;
+
+function getOrCreateRefreshRequest(refreshToken: string): Promise<RefreshPayload> {
+  if (!refreshRequest) {
+    refreshRequest = axios
+      .post(`${API_BASE_URL}/api/auth/refresh`, {
+        refreshToken
+      })
+      .then((response) => response.data.data as RefreshPayload)
+      .finally(() => {
+        refreshRequest = null;
+      });
+  }
+
+  return refreshRequest;
+}
+
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,
   headers: {
@@ -52,14 +74,7 @@ apiClient.interceptors.response.use(
     }
 
     try {
-      const refreshResponse = await axios.post(`${API_BASE_URL}/api/auth/refresh`, {
-        refreshToken
-      });
-
-      const payload = refreshResponse.data.data as {
-        user: typeof user;
-        tokens: { accessToken: string; refreshToken: string };
-      };
+      const payload = await getOrCreateRefreshRequest(refreshToken);
 
       setSession(payload.user, payload.tokens.accessToken, payload.tokens.refreshToken);
       originalRequest.headers.Authorization = `Bearer ${payload.tokens.accessToken}`;

@@ -1,7 +1,12 @@
 import { Router, type NextFunction, type Request, type Response } from "express";
 import { z } from "zod";
 import { ApiError } from "../middleware/error.middleware";
-import { completePublicSigning, getPublicSigningSession } from "../services/sign.service";
+import { publicSigningRateLimiter } from "../middleware/rateLimiter.middleware";
+import {
+  completePublicSigning,
+  getPublicSigningDocument,
+  getPublicSigningSession
+} from "../services/sign.service";
 
 const router = Router();
 
@@ -32,7 +37,7 @@ function parseBody<T>(schema: z.ZodSchema<T>, body: unknown): T {
   return parsed.data;
 }
 
-router.get("/:token", async (req: Request, res: Response, next: NextFunction) => {
+router.get("/:token", publicSigningRateLimiter, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const data = await getPublicSigningSession(req.params.token);
     res.status(200).json({ data });
@@ -41,7 +46,17 @@ router.get("/:token", async (req: Request, res: Response, next: NextFunction) =>
   }
 });
 
-router.post("/:token/complete", async (req: Request, res: Response, next: NextFunction) => {
+router.get("/:token/document", publicSigningRateLimiter, async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const document = await getPublicSigningDocument(req.params.token);
+    res.setHeader("Content-Disposition", `inline; filename="${encodeURIComponent(document.originalFilename)}"`);
+    res.sendFile(document.absolutePath);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post("/:token/complete", publicSigningRateLimiter, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const payload = parseBody(completeSigningSchema, req.body);
 

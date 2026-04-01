@@ -96,7 +96,7 @@ async function ensureOrgForUser(userId: string): Promise<{ orgId: string }> {
     const orgResult = await client.query<{ id: string }>(
       `
         INSERT INTO organizations (id, name, plan)
-        VALUES ($1, $2, 'enterprise')
+        VALUES ($1, $2, 'business')
         RETURNING id
       `,
       [randomUUID(), `Org ${user.full_name}`]
@@ -111,7 +111,7 @@ async function ensureOrgForUser(userId: string): Promise<{ orgId: string }> {
       `
         UPDATE users
         SET org_id = $2,
-            role = 'enterprise',
+            role = 'business',
             updated_at = NOW()
         WHERE id = $1
       `,

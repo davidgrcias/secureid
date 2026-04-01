@@ -105,3 +105,7 @@ export async function saveEnvelopeFields(envelopeId: string, fields: EnvelopeFie
 export async function sendEnvelope(envelopeId: string): Promise<void> {
   await apiClient.post(`/api/envelopes/${envelopeId}/send`);
 }
+
+export async function archiveDocument(documentId: string): Promise<void> {
+  await apiClient.delete(`/api/documents/${documentId}`);
+}

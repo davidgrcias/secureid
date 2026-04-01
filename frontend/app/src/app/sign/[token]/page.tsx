@@ -4,7 +4,12 @@ import { useEffect, useMemo, useState } from "react";
 import { AlertTriangle, CheckCircle2, LoaderCircle, PenTool } from "lucide-react";
 import { useParams } from "next/navigation";
 import SignatureModal from "@/components/signature/SignatureModal";
-import { completeSigning, getSigningSession, type SigningSession } from "@/lib/signing";
+import {
+  completeSigning,
+  getSigningDocumentBlob,
+  getSigningSession,
+  type SigningSession
+} from "@/lib/signing";
 
 type SignaturePayload = {
   type: "draw" | "type" | "upload";
@@ -20,6 +25,8 @@ export default function PublicSigningPage() {
   const [fieldValues, setFieldValues] = useState<Record<string, string>>({});
   const [signaturePayload, setSignaturePayload] = useState<SignaturePayload | undefined>(undefined);
   const [targetSignatureFieldId, setTargetSignatureFieldId] = useState<string | null>(null);
+  const [documentPreviewUrl, setDocumentPreviewUrl] = useState<string | null>(null);
+  const [isLoadingPreview, setIsLoadingPreview] = useState(false);
 
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -57,6 +64,46 @@ export default function PublicSigningPage() {
         setIsLoading(false);
       });
   }, [token]);
+
+  useEffect(() => {
+    if (!token || !session) {
+      return;
+    }
+
+    let mounted = true;
+    let objectUrl: string | null = null;
+
+    setIsLoadingPreview(true);
+
+    getSigningDocumentBlob(token)
+      .then((blob) => {
+        if (!mounted) {
+          return;
+        }
+
+        objectUrl = URL.createObjectURL(blob);
+        setDocumentPreviewUrl(objectUrl);
+      })
+      .catch(() => {
+        if (!mounted) {
+          return;
+        }
+
+        setDocumentPreviewUrl(null);
+      })
+      .finally(() => {
+        if (mounted) {
+          setIsLoadingPreview(false);
+        }
+      });
+
+    return () => {
+      mounted = false;
+      if (objectUrl) {
+        URL.revokeObjectURL(objectUrl);
+      }
+    };
+  }, [session, token]);
 
   const requiredFieldIds = useMemo(() => {
     if (!session) {
@@ -157,6 +204,28 @@ export default function PublicSigningPage() {
               </div>
             </article>
 
+            <article className="space-y-3 rounded-2xl bg-surface-container-low p-4">
+              <h2 className="text-lg font-bold text-on-surface">Preview Dokumen</h2>
+              {isLoadingPreview ? (
+                <div className="flex items-center gap-2 rounded-xl bg-surface-container px-3 py-2 text-sm text-on-surface-variant">
+                  <LoaderCircle className="h-4 w-4 animate-spin" />
+                  Memuat preview dokumen...
+                </div>
+              ) : null}
+
+              {documentPreviewUrl ? (
+                <iframe
+                  title="Preview dokumen signing"
+                  src={documentPreviewUrl}
+                  className="h-[520px] w-full rounded-xl border border-outline-variant/30 bg-white"
+                />
+              ) : (
+                <p className="rounded-xl bg-surface-container px-3 py-3 text-sm text-on-surface-variant">
+                  Preview tidak tersedia. Anda tetap dapat melanjutkan proses jika data sudah benar.
+                </p>
+              )}
+            </article>
+
             <section className="space-y-4 rounded-2xl bg-surface-container-low p-4">
               <h2 className="text-lg font-bold text-on-surface">Field Penandatanganan</h2>
 
@@ -209,7 +278,7 @@ export default function PublicSigningPage() {
                           Buat Signature
                         </button>
                         <span className="text-xs text-on-surface-variant">
-                          {fieldValues[field.id] ? `Terisi: ${fieldValues[field.id]}` : "Belum ada signature."}
+                          {fieldValues[field.id] ? "Signature tersimpan." : "Belum ada signature."}
                         </span>
                       </div>
                     ) : null}
@@ -239,8 +308,7 @@ export default function PublicSigningPage() {
           }
 
           setSignaturePayload(payload);
-          const label = payload.type === "type" ? payload.value : `Signed (${payload.type})`;
-          updateFieldValue(targetSignatureFieldId, label);
+          updateFieldValue(targetSignatureFieldId, payload.value);
           setTargetSignatureFieldId(null);
         }}
       />

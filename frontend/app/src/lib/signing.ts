@@ -55,6 +55,14 @@ export async function getSigningSession(token: string): Promise<SigningSession> 
   return response.data.data;
 }
 
+export async function getSigningDocumentBlob(token: string): Promise<Blob> {
+  const response = await publicSigningClient.get<Blob>(`/api/sign/${token}/document`, {
+    responseType: "blob"
+  });
+
+  return response.data;
+}
+
 export async function completeSigning(
   token: string,
   payload: {

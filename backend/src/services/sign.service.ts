@@ -157,6 +157,12 @@ function ensureEnvelopeIsSignable(row: DbSigningSessionRow): void {
   }
 }
 
+function ensureRecipientCanSign(row: DbSigningSessionRow): void {
+  if (row.recipient_role !== "signer") {
+    throw new ApiError(403, "Hanya recipient dengan role signer yang dapat menandatangani dokumen.");
+  }
+}
+
 function enforceSequentialSigning(
   sequentialSigning: boolean,
   recipientId: string,
@@ -311,6 +317,25 @@ export async function getPublicSigningSession(token: string): Promise<PublicSign
   };
 }
 
+export async function getPublicSigningDocument(token: string): Promise<{
+  absolutePath: string;
+  originalFilename: string;
+}> {
+  const session = await getSessionByToken(token);
+  const absolutePath = path.resolve(process.cwd(), session.document_file_path);
+
+  try {
+    await fs.access(absolutePath);
+  } catch {
+    throw new ApiError(404, "Dokumen untuk link signing tidak ditemukan.");
+  }
+
+  return {
+    absolutePath,
+    originalFilename: session.document_original_filename
+  };
+}
+
 export async function completePublicSigning(payload: SigningPayload): Promise<SigningResult> {
   const client = await pool.connect();
 
@@ -359,6 +384,7 @@ export async function completePublicSigning(payload: SigningPayload): Promise<Si
     }
 
     ensureEnvelopeIsSignable(session);
+    ensureRecipientCanSign(session);
 
     if (session.recipient_status === "signed") {
       throw new ApiError(400, "Dokumen sudah ditandatangani oleh penerima ini.");

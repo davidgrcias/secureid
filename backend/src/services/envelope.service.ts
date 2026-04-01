@@ -233,6 +233,12 @@ async function ensureEnvelopeOwnership(envelopeId: string, senderId: string): Pr
   return envelope;
 }
 
+function assertDraftEnvelope(envelope: DbEnvelopeRow, actionLabel: string): void {
+  if (envelope.status !== "draft") {
+    throw new ApiError(400, `Envelope harus berstatus draft untuk ${actionLabel}. Status saat ini: ${envelope.status}.`);
+  }
+}
+
 async function createAuditLog(
   envelopeId: string,
   userId: string,
@@ -504,7 +510,8 @@ export async function updateEnvelopeDraft(
     expiresAt?: string;
   }
 ): Promise<EnvelopeRecord> {
-  await ensureEnvelopeOwnership(envelopeId, senderId);
+  const ownedEnvelope = await ensureEnvelopeOwnership(envelopeId, senderId);
+  assertDraftEnvelope(ownedEnvelope, "memperbarui draft");
 
   const result = await query<DbEnvelopeRow>(
     `
@@ -555,7 +562,8 @@ export async function replaceEnvelopeFields(
   envelopeId: string,
   fields: EnvelopeFieldInput[]
 ): Promise<EnvelopeField[]> {
-  await ensureEnvelopeOwnership(envelopeId, senderId);
+  const envelope = await ensureEnvelopeOwnership(envelopeId, senderId);
+  assertDraftEnvelope(envelope, "mengubah field");
 
   const client = await pool.connect();
 
@@ -635,6 +643,7 @@ export async function replaceEnvelopeFields(
 
 export async function sendEnvelope(senderId: string, envelopeId: string): Promise<EnvelopeRecord> {
   const ownershipEnvelope = await ensureEnvelopeOwnership(envelopeId, senderId);
+  assertDraftEnvelope(ownershipEnvelope, "mengirim envelope");
 
   const result = await query<DbEnvelopeRow>(
     `
@@ -762,7 +771,15 @@ export async function sendEnvelope(senderId: string, envelopeId: string): Promis
 }
 
 export async function voidEnvelope(senderId: string, envelopeId: string): Promise<EnvelopeRecord> {
-  await ensureEnvelopeOwnership(envelopeId, senderId);
+  const ownershipEnvelope = await ensureEnvelopeOwnership(envelopeId, senderId);
+
+  if (ownershipEnvelope.status === "completed") {
+    throw new ApiError(400, "Envelope yang sudah completed tidak dapat dibatalkan.");
+  }
+
+  if (ownershipEnvelope.status === "voided") {
+    throw new ApiError(400, "Envelope sudah dibatalkan sebelumnya.");
+  }
 
   const result = await query<DbEnvelopeRow>(
     `

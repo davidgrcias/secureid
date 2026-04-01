@@ -11,6 +11,7 @@ import {
   verifyRefreshToken,
   type JwtRefreshPayload
 } from "../utils/token";
+import { sendPasswordResetEmail } from "./email.service";
 import type { AuthTokens, RequestMeta, SafeUser } from "../types";
 
 type DbUserRow = {
@@ -381,8 +382,18 @@ export async function requestPasswordReset(email: string): Promise<{ resetToken?
 
   const resetToken = generateSecureToken(32);
   const cacheKey = `${RESET_PASSWORD_CACHE_PREFIX}:${resetToken}`;
+  const resetUrl = `${env.CORS_ORIGIN.replace(/\/$/, "")}/reset-password?token=${encodeURIComponent(resetToken)}`;
 
   await cache.set(cacheKey, { userId: user.id }, env.PASSWORD_RESET_TTL_SECONDS);
+
+  try {
+    await sendPasswordResetEmail({
+      to: email,
+      resetUrl
+    });
+  } catch {
+    // Keep response generic and avoid leaking delivery errors to clients.
+  }
 
   if (env.NODE_ENV !== "production") {
     return { resetToken };

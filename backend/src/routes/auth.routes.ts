@@ -1,6 +1,7 @@
 import { Router, type NextFunction, type Request, type Response } from "express";
 import { z } from "zod";
 import { authMiddleware } from "../middleware/auth.middleware";
+import { authRateLimiter } from "../middleware/rateLimiter.middleware";
 import {
   loginUser,
   logoutUser,
@@ -58,7 +59,7 @@ function getRequestMeta(req: Request): RequestMeta {
   };
 }
 
-router.post("/register", async (req: Request, res: Response, next: NextFunction) => {
+router.post("/register", authRateLimiter, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const payload = parseBody(registerSchema, req.body);
     const result = await registerUser(payload, getRequestMeta(req));
@@ -72,7 +73,7 @@ router.post("/register", async (req: Request, res: Response, next: NextFunction)
   }
 });
 
-router.post("/login", async (req: Request, res: Response, next: NextFunction) => {
+router.post("/login", authRateLimiter, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const payload = parseBody(loginSchema, req.body);
     const result = await loginUser(payload, getRequestMeta(req));
@@ -86,7 +87,7 @@ router.post("/login", async (req: Request, res: Response, next: NextFunction) =>
   }
 });
 
-router.post("/refresh", async (req: Request, res: Response, next: NextFunction) => {
+router.post("/refresh", authRateLimiter, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const payload = parseBody(refreshSchema, req.body);
     const result = await refreshUserToken(payload.refreshToken);
@@ -116,7 +117,7 @@ router.post("/logout", authMiddleware, async (req: Request, res: Response, next:
   }
 });
 
-router.post("/forgot-password", async (req: Request, res: Response, next: NextFunction) => {
+router.post("/forgot-password", authRateLimiter, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const payload = parseBody(forgotPasswordSchema, req.body);
     const result = await requestPasswordReset(payload.email);
@@ -130,7 +131,7 @@ router.post("/forgot-password", async (req: Request, res: Response, next: NextFu
   }
 });
 
-router.post("/reset-password", async (req: Request, res: Response, next: NextFunction) => {
+router.post("/reset-password", authRateLimiter, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const payload = parseBody(resetPasswordSchema, req.body);
     await resetUserPassword(payload);

@@ -58,7 +58,7 @@ async function ensureOrgMembership(userId: string): Promise<DbOrgMemberRoleRow |
       await client.query(
         `
           INSERT INTO organizations (id, name, plan)
-          VALUES ($1, $2, 'enterprise')
+          VALUES ($1, $2, 'business')
         `,
         [orgId, `Org ${user.full_name}`]
       );
@@ -67,7 +67,7 @@ async function ensureOrgMembership(userId: string): Promise<DbOrgMemberRoleRow |
         `
           UPDATE users
           SET org_id = $2,
-              role = 'enterprise',
+              role = 'business',
               updated_at = NOW()
           WHERE id = $1
         `,

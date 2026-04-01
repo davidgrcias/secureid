@@ -42,7 +42,10 @@ async function bootstrap(): Promise<void> {
   app.use(express.json({ limit: "10mb" }));
   app.use(express.urlencoded({ extended: true }));
   app.use(apiRateLimiter);
-  app.use("/uploads", express.static(env.UPLOAD_DIR));
+
+  if (env.NODE_ENV === "development") {
+    app.use("/uploads", express.static(env.UPLOAD_DIR));
+  }
 
   app.get("/", (_req, res) => {
     res.status(200).json({

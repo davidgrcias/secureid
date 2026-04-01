@@ -1,0 +1,2 @@
+-- Optional seed data for local development.
+-- Keep this file empty for now to avoid storing test credentials in git.

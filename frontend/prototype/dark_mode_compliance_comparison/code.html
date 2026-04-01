@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+
+<html class="light" lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SecureID Dashboard - Professional Fintech</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-primary-fixed-variant": "#0040a2",
+              "surface-container": "#e5eeff",
+              "surface-container-highest": "#d8e3f6",
+              "tertiary": "#35445a",
+              "surface-container-high": "#dee9fc",
+              "on-error": "#ffffff",
+              "on-secondary-fixed-variant": "#00531e",
+              "on-primary-fixed": "#001848",
+              "tertiary-fixed-dim": "#b7c8e1",
+              "on-secondary-fixed": "#002108",
+              "error": "#ba1a1a",
+              "primary-container": "#0052cc",
+              "surface-tint": "#0c56d0",
+              "surface-dim": "#cfdbee",
+              "tertiary-container": "#4c5c72",
+              "surface-bright": "#f8f9ff",
+              "primary-fixed": "#dae2ff",
+              "inverse-surface": "#26313f",
+              "on-primary": "#ffffff",
+              "on-tertiary-fixed": "#0b1c30",
+              "on-primary-container": "#c4d2ff",
+              "inverse-primary": "#b2c5ff",
+              "surface-variant": "#d8e3f6",
+              "outline": "#737685",
+              "on-surface-variant": "#434654",
+              "on-surface": "#111c2a",
+              "inverse-on-surface": "#eaf1ff",
+              "secondary-fixed": "#69ff87",
+              "surface": "#f8f9ff",
+              "outline-variant": "#c3c6d6",
+              "on-tertiary": "#ffffff",
+              "background": "#f8f9ff",
+              "secondary-container": "#5cfd80",
+              "on-background": "#111c2a",
+              "surface-container-lowest": "#ffffff",
+              "secondary-fixed-dim": "#3ce36a",
+              "on-tertiary-fixed-variant": "#38485d",
+              "primary": "#003d9b",
+              "on-secondary-container": "#00732c",
+              "on-error-container": "#93000a",
+              "tertiary-fixed": "#d3e4fe",
+              "on-secondary": "#ffffff",
+              "primary-fixed-dim": "#b2c5ff",
+              "secondary": "#006e2a",
+              "on-tertiary-container": "#c4d4ee",
+              "surface-container-low": "#eff4ff",
+              "error-container": "#ffdad6"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .dark {
+            --tw-bg-opacity: 1;
+            background-color: #0F172A !important;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background antialiased">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 border-b-0 bg-surface/80 backdrop-blur-lg dark:bg-slate-900/80 shadow-sm dark:shadow-none font-['Inter'] antialiased">
+<div class="flex justify-between items-center px-6 py-3 w-full">
+<div class="flex items-center gap-8">
+<span class="text-2xl font-black tracking-tight text-[#111c2a] dark:text-white">SecureID</span>
+<div class="hidden md:flex items-center gap-6">
+<a class="text-[#0052CC] font-bold border-b-2 border-[#0052CC] py-1" href="#">Dashboard</a>
+<a class="text-[#111c2a] dark:text-slate-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors px-2 py-1 rounded" href="#">Transaksi</a>
+<a class="text-[#111c2a] dark:text-slate-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors px-2 py-1 rounded" href="#">Laporan</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="pl-10 pr-4 py-2 bg-surface-container-low dark:bg-slate-800 border-none rounded-full text-sm w-64 focus:ring-2 focus:ring-primary" placeholder="Cari dokumen..." type="text"/>
+</div>
+<button class="p-2 rounded-full hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors active:scale-95 duration-300 ease-out">
+<span class="material-symbols-outlined text-on-surface-variant dark:text-slate-300">notifications</span>
+</button>
+<div class="h-8 w-8 rounded-full bg-primary-container flex items-center justify-center overflow-hidden border border-outline-variant">
+<img alt="User Profile Avatar" data-alt="close-up portrait of a professional Indonesian businessman in a white shirt, soft studio lighting, neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbG1T2hYAwvQllaPpyiEeg2y8OihdyYdkVSzPzjweko4VEMkmCGuUzBj383P1CgVQjfpwNvxBkQa2lA6syG7JUSt-nJERo7zCh21RTEWUQ1WLTFcpzsw_d8L98InUsaOJgQzRP5hG3BwWssDDKhxJVWYg-4aUBowgq5kk5E5ap0A5oJQBkwLw4VUp_rZh8tdjuH5DGrTxQv2YO0qTDqzg27Oh6qP-nvoTsS9wGXLjEZ4jsw-rjoTJyNR4pkzsM63wwZ8St4BJvlytd"/>
+</div>
+</div>
+</div>
+</nav>
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-full w-64 z-40 bg-surface_container_low dark:bg-slate-900 flex flex-col pt-20 pb-6 px-4 gap-2 transition-all duration-300 ease-out">
+<div class="mb-8 px-4">
+<div class="flex items-center gap-3 mb-4">
+<div class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-white">
+<span class="material-symbols-outlined">verified_user</span>
+</div>
+<div>
+<h3 class="text-sm font-bold text-on-surface dark:text-white">Budi Santoso</h3>
+<p class="text-xs text-slate-500 dark:text-slate-400">Verified Member</p>
+</div>
+</div>
+<button class="w-full py-3 bg-primary text-white rounded-xl text-sm font-bold shadow-md active:scale-95 transition-transform">
+                Mulai Tanda Tangan
+            </button>
+</div>
+<nav class="space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 bg-white dark:bg-slate-800 text-[#0052CC] font-bold shadow-sm rounded-lg text-sm font-medium tracking-wide uppercase" href="#">
+<span class="material-symbols-outlined">home</span> Beranda
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-blue-50 dark:hover:bg-slate-800/50 rounded-lg text-sm font-medium tracking-wide uppercase transition-colors" href="#">
+<span class="material-symbols-outlined">description</span> Dokumen Saya
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-blue-50 dark:hover:bg-slate-800/50 rounded-lg text-sm font-medium tracking-wide uppercase transition-colors" href="#">
+<span class="material-symbols-outlined">send</span> Kirim Dokumen
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-blue-50 dark:hover:bg-slate-800/50 rounded-lg text-sm font-medium tracking-wide uppercase transition-colors" href="#">
+<span class="material-symbols-outlined">verified_user</span> Verifikasi Identitas
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-blue-50 dark:hover:bg-slate-800/50 rounded-lg text-sm font-medium tracking-wide uppercase transition-colors" href="#">
+<span class="material-symbols-outlined">person</span> Profil
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-blue-50 dark:hover:bg-slate-800/50 rounded-lg text-sm font-medium tracking-wide uppercase transition-colors" href="#">
+<span class="material-symbols-outlined">help</span> Bantuan
+            </a>
+</nav>
+<div class="mt-auto px-4">
+<div class="p-4 bg-surface-container dark:bg-slate-800 rounded-2xl border border-primary/10">
+<p class="text-[10px] uppercase font-bold text-primary mb-1">Penyimpanan</p>
+<div class="w-full bg-slate-200 dark:bg-slate-700 h-1.5 rounded-full mb-2">
+<div class="bg-primary h-full w-[65%] rounded-full"></div>
+</div>
+<p class="text-[11px] text-slate-500">6.5 GB dari 10 GB digunakan</p>
+</div>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="ml-64 pt-24 pb-12 px-8 min-h-screen">
+<!-- Welcome Section -->
+<header class="mb-10 flex justify-between items-end">
+<div>
+<h1 class="text-3xl font-black text-on-surface dark:text-white tracking-tight mb-2">Halo, Budi Santoso</h1>
+<p class="text-slate-500 dark:text-slate-400 font-medium">Selamat datang kembali di SecureID. Anda memiliki 3 dokumen menunggu tanda tangan.</p>
+</div>
+<div class="bg-secondary/10 text-secondary dark:text-secondary-fixed px-4 py-2 rounded-full text-xs font-bold border border-secondary/20">
+                Dark mode sudah compliant – kontras AA+
+            </div>
+</header>
+<!-- Stats Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+<div class="col-span-1 p-6 bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-none flex flex-col justify-between min-h-[160px]">
+<div class="flex justify-between items-start">
+<div class="p-2 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
+<span class="material-symbols-outlined text-primary dark:text-blue-400">description</span>
+</div>
+<span class="text-secondary text-xs font-bold">+12%</span>
+</div>
+<div>
+<h4 class="text-2xl font-black text-on-surface dark:text-white">128</h4>
+<p class="text-xs text-slate-500 dark:text-slate-400 font-medium uppercase tracking-wider">Total Dokumen</p>
+</div>
+</div>
+<div class="col-span-1 p-6 bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-none flex flex-col justify-between min-h-[160px]">
+<div class="flex justify-between items-start">
+<div class="p-2 bg-amber-50 dark:bg-amber-900/30 rounded-lg">
+<span class="material-symbols-outlined text-amber-600">pending_actions</span>
+</div>
+<span class="text-amber-600 text-xs font-bold">3 Menunggu</span>
+</div>
+<div>
+<h4 class="text-2xl font-black text-on-surface dark:text-white">14</h4>
+<p class="text-xs text-slate-500 dark:text-slate-400 font-medium uppercase tracking-wider">Perlu Tanda Tangan</p>
+</div>
+</div>
+<div class="col-span-1 p-6 bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-none flex flex-col justify-between min-h-[160px]">
+<div class="flex justify-between items-start">
+<div class="p-2 bg-green-50 dark:bg-green-900/30 rounded-lg">
+<span class="material-symbols-outlined text-secondary">verified</span>
+</div>
+<span class="text-secondary text-xs font-bold">Selesai</span>
+</div>
+<div>
+<h4 class="text-2xl font-black text-on-surface dark:text-white">112</h4>
+<p class="text-xs text-slate-500 dark:text-slate-400 font-medium uppercase tracking-wider">Dokumen Terverifikasi</p>
+</div>
+</div>
+<div class="col-span-1 p-6 bg-primary dark:bg-blue-600 rounded-2xl shadow-lg flex flex-col justify-between min-h-[160px] text-white">
+<div class="flex justify-between items-start">
+<div class="p-2 bg-white/20 rounded-lg">
+<span class="material-symbols-outlined">upgrade</span>
+</div>
+</div>
+<div>
+<h4 class="text-lg font-bold">Upgrade Pro</h4>
+<p class="text-xs text-white/80 font-medium">Buka fitur tanda tangan tanpa batas.</p>
+</div>
+</div>
+</div>
+<!-- Content Grid: Table + Comparison -->
+<div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+<!-- Recent Documents -->
+<div class="xl:col-span-2 bg-white dark:bg-slate-800 rounded-3xl shadow-sm overflow-hidden border border-slate-100 dark:border-none">
+<div class="px-8 py-6 flex justify-between items-center border-b border-slate-50 dark:border-slate-700/50">
+<h2 class="text-lg font-bold text-on-surface dark:text-white">Dokumen Terbaru</h2>
+<button class="text-sm font-bold text-primary dark:text-blue-400 hover:underline">Lihat Semua</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="bg-surface-container-low dark:bg-slate-900/50">
+<th class="px-8 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest">Nama Dokumen</th>
+<th class="px-8 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest">Status</th>
+<th class="px-8 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest">Tanggal</th>
+<th class="px-8 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest">Aksi</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-50 dark:divide-slate-700/30">
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-700/20 transition-colors">
+<td class="px-8 py-5">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-slate-400">picture_as_pdf</span>
+<div>
+<p class="text-sm font-bold text-on-surface dark:text-slate-200">Perjanjian_Kerja_Q3.pdf</p>
+<p class="text-[10px] text-slate-400">2.4 MB • Internal HR</p>
+</div>
+</div>
+</td>
+<td class="px-8 py-5">
+<span class="px-3 py-1 bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400 rounded-full text-[10px] font-black uppercase">Selesai</span>
+</td>
+<td class="px-8 py-5 text-sm text-slate-500 dark:text-slate-400">12 Okt 2025</td>
+<td class="px-8 py-5">
+<button class="p-2 text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-700/20 transition-colors">
+<td class="px-8 py-5">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-slate-400">description</span>
+<div>
+<p class="text-sm font-bold text-on-surface dark:text-slate-200">NDA_Project_Omega.docx</p>
+<p class="text-[10px] text-slate-400">1.1 MB • Legal Department</p>
+</div>
+</div>
+</td>
+<td class="px-8 py-5">
+<span class="px-3 py-1 bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400 rounded-full text-[10px] font-black uppercase">Menunggu</span>
+</td>
+<td class="px-8 py-5 text-sm text-slate-500 dark:text-slate-400">10 Okt 2025</td>
+<td class="px-8 py-5">
+<button class="p-2 text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-700/20 transition-colors">
+<td class="px-8 py-5">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-slate-400">picture_as_pdf</span>
+<div>
+<p class="text-sm font-bold text-on-surface dark:text-slate-200">Invoice_Inv-2025-001.pdf</p>
+<p class="text-[10px] text-slate-400">842 KB • Finance</p>
+</div>
+</div>
+</td>
+<td class="px-8 py-5">
+<span class="px-3 py-1 bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-400 rounded-full text-[10px] font-black uppercase">Terkirim</span>
+</td>
+<td class="px-8 py-5 text-sm text-slate-500 dark:text-slate-400">08 Okt 2025</td>
+<td class="px-8 py-5">
+<button class="p-2 text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Side Feature: Dark Mode Compliance Showcase -->
+<div class="flex flex-col gap-6">
+<div class="p-8 bg-white dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-none shadow-sm overflow-hidden relative">
+<div class="absolute top-0 right-0 p-4">
+<span class="material-symbols-outlined text-slate-100 dark:text-slate-700 text-6xl">contrast</span>
+</div>
+<h3 class="text-lg font-bold text-on-surface dark:text-white mb-4 relative z-10">Komparasi Visual</h3>
+<div class="space-y-4 relative z-10">
+<div class="flex items-center gap-4 p-4 rounded-xl border border-slate-100 bg-surface-container-lowest">
+<div class="w-12 h-12 rounded-full bg-slate-200"></div>
+<div>
+<p class="text-xs font-bold text-slate-900">Light Mode Card</p>
+<p class="text-[10px] text-slate-500">Surface Lowest White</p>
+</div>
+</div>
+<div class="flex items-center gap-4 p-4 rounded-xl border border-slate-700 bg-slate-900">
+<div class="w-12 h-12 rounded-full bg-slate-700"></div>
+<div>
+<p class="text-xs font-bold text-white">Dark Mode Card</p>
+<p class="text-[10px] text-slate-400">Surface High Slate</p>
+</div>
+</div>
+<p class="text-xs text-slate-400 italic">Sistem secara otomatis menyesuaikan nilai luminansi untuk menjaga keterbacaan teks minimal rasio 4.5:1 (AA).</p>
+</div>
+</div>
+<div class="p-6 bg-slate-900 rounded-3xl border border-slate-700 flex items-center justify-between group cursor-pointer hover:bg-slate-800 transition-colors">
+<div class="flex items-center gap-4">
+<div class="p-3 bg-blue-500 rounded-2xl">
+<span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">dark_mode</span>
+</div>
+<div>
+<h4 class="text-sm font-bold text-white">Dark Mode Aktif</h4>
+<p class="text-xs text-slate-400">Sesuai pengaturan sistem</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-slate-500 group-hover:translate-x-1 transition-transform">chevron_right</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full border-t border-slate-100 dark:border-slate-800 bg-surface dark:bg-slate-950 flex justify-between items-center px-8 py-6 ml-64 text-xs text-slate-500 Inter">
+<div class="flex items-center gap-6">
+<span>Copyright 2026 PT SecureID Indonesia</span>
+<div class="flex gap-4">
+<a class="text-slate-500 hover:text-[#0052CC] transition-colors" href="#">Privacy</a>
+<a class="text-slate-500 hover:text-[#0052CC] transition-colors" href="#">Terms</a>
+<a class="text-slate-500 hover:text-[#0052CC] transition-colors" href="#">Contact</a>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-green-500"></span>
+<span class="font-medium text-slate-400">Semua sistem operasional</span>
+</div>
+</footer>
+<!-- JS for side-by-side simulation if needed, but here we just use dark class on root -->
+<script>
+        // Automatic toggle based on preference or manual button
+        // For the purpose of this output, we keep it static but it supports 'dark' class
+        const html = document.querySelector('html');
+        // Uncomment to force dark mode:
+        // html.classList.add('dark');
+    </script>
+</body></html>

@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+
+<html class="light" lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SecureID V2 - Status Verifikasi Identitas</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-primary-fixed-variant": "#0040a2",
+                        "surface-container": "#e5eeff",
+                        "surface-container-highest": "#d8e3f6",
+                        "tertiary": "#35445a",
+                        "surface-container-high": "#dee9fc",
+                        "on-error": "#ffffff",
+                        "on-secondary-fixed-variant": "#00531e",
+                        "on-primary-fixed": "#001848",
+                        "tertiary-fixed-dim": "#b7c8e1",
+                        "on-secondary-fixed": "#002108",
+                        "error": "#ba1a1a",
+                        "primary-container": "#0052cc",
+                        "surface-tint": "#0c56d0",
+                        "surface-dim": "#cfdbee",
+                        "tertiary-container": "#4c5c72",
+                        "surface-bright": "#f8f9ff",
+                        "primary-fixed": "#dae2ff",
+                        "inverse-surface": "#26313f",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-fixed": "#0b1c30",
+                        "on-primary-container": "#c4d2ff",
+                        "inverse-primary": "#b2c5ff",
+                        "surface-variant": "#d8e3f6",
+                        "outline": "#737685",
+                        "on-surface-variant": "#434654",
+                        "on-surface": "#111c2a",
+                        "inverse-on-surface": "#eaf1ff",
+                        "secondary-fixed": "#69ff87",
+                        "surface": "#f8f9ff",
+                        "outline-variant": "#c3c6d6",
+                        "on-tertiary": "#ffffff",
+                        "background": "#f8f9ff",
+                        "secondary-container": "#5cfd80",
+                        "on-background": "#111c2a",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-fixed-dim": "#3ce36a",
+                        "on-tertiary-fixed-variant": "#38485d",
+                        "primary": "#003d9b",
+                        "on-secondary-container": "#00732c",
+                        "on-error-container": "#93000a",
+                        "tertiary-fixed": "#d3e4fe",
+                        "on-secondary": "#ffffff",
+                        "primary-fixed-dim": "#b2c5ff",
+                        "secondary": "#006e2a",
+                        "on-tertiary-container": "#c4d4ee",
+                        "surface-container-low": "#eff4ff",
+                        "error-container": "#ffdad6"
+                    },
+                    fontFamily: {
+                        "headline": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .blur-img {
+            filter: blur(8px);
+        }
+        .dark-img {
+            filter: brightness(0.2);
+        }
+        .no-face-img {
+            filter: grayscale(100%) opacity(0.5);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-primary-container selection:text-white">
+<!-- TopNavBar (Shared Component) -->
+<nav class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-sm flex items-center justify-between px-6 h-16">
+<div class="flex items-center gap-4">
+<span class="text-xl font-bold text-blue-700 dark:text-blue-400 font-inter tracking-tight">SecureID V2</span>
+</div>
+<div class="flex items-center gap-6">
+<div class="hidden md:flex items-center gap-8 text-slate-600 dark:text-slate-400 font-medium">
+<a class="text-blue-700 dark:text-blue-400 font-semibold transition-colors" href="#">Workflows</a>
+<a class="hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors px-3 py-1 rounded-lg" href="#">Documents</a>
+<a class="hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors px-3 py-1 rounded-lg" href="#">Vault</a>
+</div>
+<div class="flex items-center gap-3">
+<button class="p-2 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-full transition-colors">
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-400">notifications</span>
+</button>
+<button class="p-2 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-full transition-colors">
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-400">help</span>
+</button>
+<div class="h-8 w-8 rounded-full bg-surface-container-highest overflow-hidden border border-outline-variant/20">
+<img alt="User profile photo" class="w-full h-full object-cover" data-alt="Professional headshot of a businessman in a suit with a friendly expression against a clean office background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBVA4c5yHNIN9MAlb3lDwFZ-x9OPX6CjNb3la2tsjpBmTXjyffKpdUwxMUlrJZJaQ47C6yIgrSmLpTdG7eXZk_NNTqquH7XO9rbDlkEebX7GW5pq_R6nunXBFU7tADzZj8Mw6r_W4-FbHrhDqrIGvQfORoTku6J5ykKQQpNaZE4GtU-HjeKnKt2fLKtoLnJU03QvdRx8IglHvxV-QUGjvx5gcN-csFL7ctKikp5pTYVAr4sDxSPQRiTDffh2E23TcDzobhSO41GVgSq"/>
+</div>
+</div>
+</div>
+</nav>
+<!-- SideNavBar (Shared Component) -->
+<aside class="fixed left-0 top-0 h-screen w-64 bg-slate-50 dark:bg-slate-950 flex flex-col pt-20 pb-6 px-4 hidden lg:flex">
+<div class="space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:text-blue-600 hover:bg-slate-100 dark:hover:bg-slate-900 transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-medium text-sm">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:text-blue-600 hover:bg-slate-100 dark:hover:bg-slate-900 transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined">description</span>
+<span class="font-medium text-sm">Documents</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border-r-4 border-blue-700 transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined">account_tree</span>
+<span class="font-medium text-sm">Workflows</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:text-blue-600 hover:bg-slate-100 dark:hover:bg-slate-900 transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined">enhanced_encryption</span>
+<span class="font-medium text-sm">Vault</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:text-blue-600 hover:bg-slate-100 dark:hover:bg-slate-900 transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-medium text-sm">Settings</span>
+</a>
+</div>
+<div class="mt-8 px-4">
+<button class="w-full bg-primary text-on-primary py-3 rounded-xl font-semibold shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                New Signature
+            </button>
+</div>
+<div class="mt-auto space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:text-blue-600 transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined">contact_support</span>
+<span class="font-medium text-sm">Help Center</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:text-blue-600 transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-medium text-sm">Sign Out</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="lg:ml-64 pt-24 pb-12 px-6 md:px-12 min-h-screen transition-colors duration-300">
+<header class="mb-10 max-w-6xl mx-auto">
+<div class="flex items-end justify-between">
+<div>
+<span class="text-primary font-bold tracking-[0.2em] text-xs uppercase mb-2 block">Enterprise Identity</span>
+<h1 class="text-4xl font-extrabold text-on-surface tracking-tight leading-none">Status Verifikasi e-KYC</h1>
+<p class="text-on-surface-variant mt-3 body-lg max-w-xl">Laporan status pemrosesan identitas digital untuk keamanan tingkat tinggi dan validasi hukum yang sah.</p>
+</div>
+</div>
+</header>
+<!-- Mode Toggle Indicator (Simulated) -->
+<div class="max-w-6xl mx-auto flex items-center gap-4 mb-8">
+<div class="flex p-1 bg-surface-container rounded-full border border-outline-variant/20">
+<button class="px-4 py-1.5 rounded-full bg-white text-primary text-xs font-bold shadow-sm">LIGHT MODE</button>
+<div class="px-4 py-1.5 text-on-surface-variant/40 text-xs font-bold">DARK MODE PREVIEW BELOW</div>
+</div>
+</div>
+<!-- States Grid: LIGHT MODE -->
+<div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+<!-- Success State -->
+<div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant/10 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-3 bg-secondary/10 rounded-bl-xl">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div class="mb-4 aspect-[4/3] rounded-lg overflow-hidden bg-surface-container-low border border-outline-variant/5">
+<img alt="Verified Identity" class="w-full h-full object-cover" data-alt="Clear and high-resolution photo of an Indonesian ID card with sharp text and a clear portrait photo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlFdapQUoMy8Lwm0pw5-mtyVf2GOv4JW-BADb7r0r7KyVApYhx81NGQhAmVIl3WutHxK_0d3irFye2iypRi06XW9oktrLrjWlWDT0Ko43vOmPuLhF9eiSPN6eRmYu1Ecag-qTxbOt85aq9wY0LyacLpRXQifZJImVc4eaeNEo07s_9MrpoLmGx7NWKHmavkEHT6fa3SaDxycO8lMjPZ85nlGUR9889LXmbCUyw1xECjBeTJ7KHzGK6o6fnFeIKX2h5ofti0t6LiB7x"/>
+</div>
+<h3 class="font-bold text-on-surface text-lg mb-1">Verifikasi Berhasil</h3>
+<p class="text-on-surface-variant text-sm mb-6">Identitas telah tervalidasi oleh sistem kependudukan pusat.</p>
+<div class="flex items-center gap-2 text-secondary font-bold text-xs uppercase tracking-wider">
+<span class="material-symbols-outlined text-sm">verified</span>
+                    Tersertifikasi
+                </div>
+</div>
+<!-- Error State: Blur -->
+<div class="bg-surface-container-lowest rounded-xl p-6 border border-error-container/30 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
+<div class="absolute top-0 right-0 p-3 bg-error/10 rounded-bl-xl">
+<span class="material-symbols-outlined text-error">error</span>
+</div>
+<div class="mb-4 aspect-[4/3] rounded-lg overflow-hidden bg-surface-container-low border border-outline-variant/5 relative">
+<img alt="Blurry KTP" class="w-full h-full object-cover blur-img" data-alt="Blurred and out-of-focus close up of an ID card on a wooden table making the text unreadable" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDtekW1j1kiPuO7srfuq8Slks2qJK4FPINzI8Px3MWjoR5XJ_pIQdPJ8QY-_s22Q07I_qxVdNNpats0CpvHeIQzfsPT-CaB7NjLOXg1CvvBMirNgISsNlzmj9MKyfe15tuSiV_VjD2etrNKhjICdBmpFvgti_A1gMp2_Toxh3JFWzNYc8UnFzgKAIUZCIsXNmoOqeToFqaKLA-KB5f-UImaVDE1zSfQQxCS3TFmFa_X7lZ9mPBTW2hqLdso8z6KT9QjoaQI1uklXGfm"/>
+<div class="absolute inset-0 bg-error/5 flex items-center justify-center">
+<span class="bg-error text-white px-3 py-1 rounded-full text-[10px] font-bold">GAMBAR KABUR</span>
+</div>
+</div>
+<h3 class="font-bold text-on-surface text-lg mb-1">KTP Blur</h3>
+<p class="text-on-surface-variant text-sm mb-6">Pastikan kamera terfokus dan teks pada KTP terbaca dengan jelas.</p>
+<button class="w-full py-2.5 bg-error-container text-on-error-container rounded-lg font-bold text-sm hover:bg-error-container/80 transition-colors">
+                    Ambil Ulang Foto
+                </button>
+</div>
+<!-- Error State: Dark -->
+<div class="bg-surface-container-lowest rounded-xl p-6 border border-error-container/30 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
+<div class="absolute top-0 right-0 p-3 bg-error/10 rounded-bl-xl">
+<span class="material-symbols-outlined text-error">brightness_low</span>
+</div>
+<div class="mb-4 aspect-[4/3] rounded-lg overflow-hidden bg-surface-container-low border border-outline-variant/5 relative">
+<img alt="Dark Photo" class="w-full h-full object-cover dark-img" data-alt="Very dark and poorly lit environment with an ID card barely visible in the shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBZGNq2DOm9O0bTC7uHuf1BBJ4wFXyPXqk5t0_2Xir7EBKwtU6-aKAt_exO0osIah0vZ5782h0_FqvAJRDkmh0TMj7-E008dJ8sHY6SUa2XwnNyhWxZSkCqy86HY_-LouCpXrtwOgnIW9caVb7jwHpxJNJKiuje-eVigVjVli_uKN5fQPOOL6_iXHYZBq16UCtLcYVY6ioqL9ve3mhxb1SiYPFXCg8DqNIJaqond3Dza7t9Pev6Ke2awQCTvFfmbiaG4FkfWdYTmYfc"/>
+<div class="absolute inset-0 bg-black/40 flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-3xl">light_mode</span>
+</div>
+</div>
+<h3 class="font-bold text-on-surface text-lg mb-1">Cahaya Terlalu Gelap</h3>
+<p class="text-on-surface-variant text-sm mb-6">Pindah ke tempat yang lebih terang atau nyalakan lampu ruangan.</p>
+<button class="w-full py-2.5 bg-surface-container-high text-on-surface-variant rounded-lg font-bold text-sm hover:bg-surface-container-highest transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">refresh</span>
+                    Coba Lagi
+                </button>
+</div>
+<!-- Error State: No Face -->
+<div class="bg-surface-container-lowest rounded-xl p-6 border border-error-container/30 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
+<div class="absolute top-0 right-0 p-3 bg-error/10 rounded-bl-xl">
+<span class="material-symbols-outlined text-error">face_up</span>
+</div>
+<div class="mb-4 aspect-[4/3] rounded-lg overflow-hidden bg-surface-container-low border border-outline-variant/5 relative">
+<img alt="Liveness Check" class="w-full h-full object-cover no-face-img" data-alt="A portrait photo of a person partially covered by glare or extreme shadow making facial features unrecognizable" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDUj9QuxH8i7qTxyxvXWaSBwBVoCvncUUNAVdFFDbxZOcsKh1RWymtHpVNa3tZsctBrFsZ6EdzynYqdqB29EgqnwUjUUiyHREOib9Sj5pXR8AjF6jCSJvATqMaA4fu-bJrgXUr6oBezgbzUa3X3jdTE8lvOIjOGZKdXwtmsLoU-4Tp8CrTCR2vYyEh48a375p7cYAIy5I8XNNxaGcolGIubKv5IhZfZCEm4BTDN8F0Rbps13aluWSv-wHkjMKrLKJrtFioTMwGhQ7Hf"/>
+<div class="absolute inset-0 border-2 border-dashed border-error/50 m-4 rounded-full"></div>
+</div>
+<h3 class="font-bold text-on-surface text-lg mb-1">Wajah Tidak Terdeteksi</h3>
+<p class="text-on-surface-variant text-sm mb-6">Posisikan wajah Anda tepat di dalam bingkai yang disediakan.</p>
+<button class="w-full py-2.5 bg-surface-container-high text-on-surface-variant rounded-lg font-bold text-sm hover:bg-surface-container-highest transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">info</span>
+                    Lihat Panduan
+                </button>
+</div>
+</div>
+<!-- Section: DARK MODE PREVIEW -->
+<div class="dark">
+<div class="max-w-6xl mx-auto p-12 bg-slate-900 rounded-3xl border border-slate-800 shadow-2xl relative overflow-hidden">
+<div class="absolute top-0 right-0 p-6 opacity-20 rotate-12">
+<span class="material-symbols-outlined text-[120px] text-blue-400">shield_person</span>
+</div>
+<h2 class="text-2xl font-bold text-slate-100 mb-8 flex items-center gap-3">
+<span class="w-1.5 h-8 bg-blue-500 rounded-full"></span>
+                    Dark Mode Preview
+                </h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- Success Dark -->
+<div class="bg-slate-950/50 backdrop-blur rounded-2xl p-6 border border-slate-800 flex gap-6">
+<div class="w-32 aspect-square rounded-xl overflow-hidden bg-slate-800 border border-slate-700 shrink-0">
+<img alt="Verified Small" class="w-full h-full object-cover grayscale brightness-125" data-alt="Close up of a chip on a smart card under professional lighting with glowing micro-details" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-tIJafJaRlv7iAIK0jQE15mFdlCdU2GJ8r8DHBm3BvPc8OcbALEhMr7HEMrPmtBRvHyQs0nh0PsguXssTfGhs3ryMSnvfrPhkJUYoXQIU2AS1GfVA96IPYRMLt1jgrr0hPTdztc51SGeGAbKDTlTJaDIJvr702l7apEjqXz2Nji5ZQYb5Ef2pKhLkS7VqWQQ_TEfGrtbf6BJOECLMrg_4cnXsdNUnlNEBHbQTme2FCwP2iZBvagc10QQLzvXA_egZ17ZGYZhcH_f5"/>
+</div>
+<div class="flex-1">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-emerald-400 text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-[10px] font-bold text-emerald-400 uppercase tracking-widest">Completed</span>
+</div>
+<h4 class="text-white font-bold text-lg mb-1">Verifikasi Berhasil ✓</h4>
+<p class="text-slate-400 text-xs leading-relaxed">Seluruh data identitas telah sinkron dengan basis data pemerintah. Akses penuh diberikan.</p>
+</div>
+</div>
+<!-- Error Dark -->
+<div class="bg-slate-950/50 backdrop-blur rounded-2xl p-6 border border-red-900/20 flex gap-6">
+<div class="w-32 aspect-square rounded-xl overflow-hidden bg-slate-800 border border-red-900/30 shrink-0 relative">
+<img alt="Error Dark" class="w-full h-full object-cover blur-[4px] opacity-40" data-alt="Blurred image of digital document on a dark glowing screen with error symbols" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDk2kjZWVDXdDZfqWEi_mi7HIYiNt0A33ZoXeEBSzf6BeXl73sC8LKJ3c11iSBgMgp-lxmyh1_2WiSXUOPSitzg0uEzCg_zacqhBJkPABR6x0SERIWtcbidtWJf1Pqj1rJo1Bj-DhnJUIL02i8esHeESHSZF-sT8rVsEFOUhiTi9Wv3sfM1qiqK4tnUf54UwzDnKWa8vgrdICuDyLlq4EbZWjnOE27S7OFXgyH8FpCPqhMl4bJ922dp6kXNde4ttJRLlDBniRTqiR3r"/>
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-red-500 text-3xl">warning</span>
+</div>
+</div>
+<div class="flex-1">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-red-400 text-sm">cancel</span>
+<span class="text-[10px] font-bold text-red-400 uppercase tracking-widest">Input Error</span>
+</div>
+<h4 class="text-white font-bold text-lg mb-1">KTP Blur</h4>
+<p class="text-slate-400 text-xs leading-relaxed mb-4">Gagal mengekstraksi data teks dari gambar. Mohon gunakan pencahayaan yang stabil.</p>
+<button class="px-4 py-1.5 bg-red-500/10 border border-red-500/20 text-red-400 rounded-lg text-[10px] font-bold uppercase tracking-wider hover:bg-red-500/20 transition-colors">
+                                Ambil Ulang Foto
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer Help Area -->
+<footer class="max-w-6xl mx-auto mt-16 pt-8 border-t border-outline-variant/10">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2 text-on-surface-variant text-sm">
+<span class="material-symbols-outlined text-[20px]">verified_user</span>
+<span>Enkripsi AES-256</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant text-sm">
+<span class="material-symbols-outlined text-[20px]">gavel</span>
+<span>Patuh Regulasi OJK</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-xs text-on-surface-variant/60">© 2024 SecureID V2 - Sistem Identitas Digital Terpadu</span>
+</div>
+</div>
+</footer>
+</main>
+<!-- FAB (Suppressed as per rules for detailed screens, but showing logic awareness) -->
+<!-- The FAB is suppressed because this is a status/details focused screen -->
+</body></html>

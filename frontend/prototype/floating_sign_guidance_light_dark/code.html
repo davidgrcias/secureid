@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+
+<html class="light" lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SecureID V2 - Penandatanganan Dokumen</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-primary-fixed-variant": "#0040a2",
+                        "surface-container": "#e5eeff",
+                        "surface-container-highest": "#d8e3f6",
+                        "tertiary": "#35445a",
+                        "surface-container-high": "#dee9fc",
+                        "on-error": "#ffffff",
+                        "on-secondary-fixed-variant": "#00531e",
+                        "on-primary-fixed": "#001848",
+                        "tertiary-fixed-dim": "#b7c8e1",
+                        "on-secondary-fixed": "#002108",
+                        "error": "#ba1a1a",
+                        "primary-container": "#0052cc",
+                        "surface-tint": "#0c56d0",
+                        "surface-dim": "#cfdbee",
+                        "tertiary-container": "#4c5c72",
+                        "surface-bright": "#f8f9ff",
+                        "primary-fixed": "#dae2ff",
+                        "inverse-surface": "#26313f",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-fixed": "#0b1c30",
+                        "on-primary-container": "#c4d2ff",
+                        "inverse-primary": "#b2c5ff",
+                        "surface-variant": "#d8e3f6",
+                        "outline": "#737685",
+                        "on-surface-variant": "#434654",
+                        "on-surface": "#111c2a",
+                        "inverse-on-surface": "#eaf1ff",
+                        "secondary-fixed": "#69ff87",
+                        "surface": "#f8f9ff",
+                        "outline-variant": "#c3c6d6",
+                        "on-tertiary": "#ffffff",
+                        "background": "#f8f9ff",
+                        "secondary-container": "#5cfd80",
+                        "on-background": "#111c2a",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-fixed-dim": "#3ce36a",
+                        "on-tertiary-fixed-variant": "#38485d",
+                        "primary": "#003d9b",
+                        "on-secondary-container": "#00732c",
+                        "on-error-container": "#93000a",
+                        "tertiary-fixed": "#d3e4fe",
+                        "on-secondary": "#ffffff",
+                        "primary-fixed-dim": "#b2c5ff",
+                        "secondary": "#006e2a",
+                        "on-tertiary-container": "#c4d4ee",
+                        "surface-container-low": "#eff4ff",
+                        "error-container": "#ffdad6"
+                    },
+                    fontFamily: {
+                        "headline": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .signature-glow {
+            box-shadow: 0 0 20px 4px rgba(255, 235, 59, 0.4);
+        }
+    </style>
+</head>
+<body class="font-body bg-background text-on-background antialiased overflow-x-hidden">
+<div class="flex min-h-screen">
+<!-- Light Mode Preview Section (Left) -->
+<div class="w-1/2 relative bg-surface border-r border-outline-variant/20">
+<!-- Header -->
+<header class="fixed top-0 w-1/2 z-50 bg-white/80 backdrop-blur-xl shadow-sm flex items-center justify-between px-6 h-16 border-r border-outline-variant/10">
+<div class="flex items-center gap-3">
+<span class="text-xl font-bold text-blue-700 tracking-tight">SecureID V2</span>
+<span class="px-2 py-1 bg-surface-container text-[10px] font-bold text-primary rounded-full uppercase tracking-widest">Light Mode</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-slate-600 hover:bg-slate-100 p-2 rounded-full transition-colors">notifications</button>
+<button class="material-symbols-outlined text-slate-600 hover:bg-slate-100 p-2 rounded-full transition-colors">help</button>
+</div>
+</header>
+<!-- Side Nav Anchor -->
+<aside class="fixed left-0 top-0 h-screen w-64 flex flex-col pt-20 pb-6 px-4 bg-slate-50 z-40 hidden lg:flex">
+<div class="space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-blue-700 bg-blue-50 border-r-4 border-blue-700 font-medium" href="#">
+<span class="material-symbols-outlined">description</span>
+                        Documents
+                    </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-100 transition-all font-medium" href="#">
+<span class="material-symbols-outlined">account_tree</span>
+                        Workflows
+                    </a>
+</div>
+</aside>
+<!-- Main Content Area (Light) -->
+<main class="pt-24 pb-20 pl-64 pr-12 max-w-5xl mx-auto">
+<div class="mb-8">
+<h1 class="text-3xl font-bold text-on-surface tracking-tight mb-2">Perjanjian Kerjasama Operasional</h1>
+<p class="text-on-surface-variant">Review dan bubuhkan tanda tangan pada area yang telah ditentukan.</p>
+</div>
+<!-- PDF Multi-page Simulation -->
+<div class="space-y-12 pb-32">
+<!-- Page 1 -->
+<div class="bg-surface-container-lowest shadow-sm rounded-xl p-16 relative aspect-[1/1.41]">
+<div class="absolute top-8 right-8 text-xs font-mono text-outline-variant">PAGE 01 / 03</div>
+<div class="space-y-6 opacity-80">
+<div class="h-4 bg-surface-container-high rounded w-3/4"></div>
+<div class="h-4 bg-surface-container-high rounded w-full"></div>
+<div class="h-4 bg-surface-container-high rounded w-5/6"></div>
+<div class="h-4 bg-surface-container-high rounded w-full"></div>
+<div class="h-32"></div>
+<div class="h-4 bg-surface-container-high rounded w-2/3"></div>
+<div class="h-4 bg-surface-container-high rounded w-full"></div>
+<div class="h-4 bg-surface-container-high rounded w-full"></div>
+</div>
+<!-- Signature Box 1 (Active) -->
+<div class="absolute bottom-24 right-16 group">
+<div class="bg-blue-50 border-2 border-dashed border-primary/40 p-6 rounded-lg w-64 h-32 flex flex-col items-center justify-center cursor-pointer hover:bg-blue-100/50 transition-all signature-glow border-primary">
+<span class="material-symbols-outlined text-primary text-3xl mb-2">edit_square</span>
+<span class="text-xs font-bold text-primary uppercase tracking-widest">Tanda Tangan Di Sini</span>
+</div>
+<div class="mt-2 text-center text-[10px] font-bold text-primary-container tracking-wider">PIHAK PERTAMA</div>
+</div>
+</div>
+<!-- Page 2 -->
+<div class="bg-surface-container-lowest shadow-sm rounded-xl p-16 relative aspect-[1/1.41]">
+<div class="absolute top-8 right-8 text-xs font-mono text-outline-variant">PAGE 02 / 03</div>
+<div class="space-y-6 opacity-80">
+<div class="h-4 bg-surface-container-high rounded w-full"></div>
+<div class="h-4 bg-surface-container-high rounded w-5/6"></div>
+<div class="h-4 bg-surface-container-high rounded w-full"></div>
+</div>
+<!-- Signature Box 2 -->
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+<div class="bg-blue-50 border-2 border-dashed border-primary/20 p-6 rounded-lg w-64 h-32 flex flex-col items-center justify-center cursor-pointer hover:bg-blue-100/50 transition-all">
+<span class="material-symbols-outlined text-primary/40 text-3xl mb-2">edit_square</span>
+<span class="text-xs font-bold text-primary/40 uppercase tracking-widest">Area Saksi</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Floating Guidance Overlay -->
+<div class="fixed bottom-10 right-[52%] flex flex-col items-end gap-3 z-50">
+<div class="relative group">
+<div class="absolute -top-12 right-0 bg-on-surface text-surface text-xs py-2 px-4 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap shadow-xl">
+                            Klik untuk lompat ke area tanda tangan berikutnya
+                            <div class="absolute bottom-[-6px] right-6 w-3 h-3 bg-on-surface rotate-45"></div>
+</div>
+<button class="flex items-center gap-3 bg-primary text-on-primary px-6 py-4 rounded-full font-bold shadow-2xl hover:scale-105 active:scale-95 transition-all">
+<span>Next Sign Area</span>
+<span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+</main>
+</div>
+<!-- Dark Mode Preview Section (Right) -->
+<div class="w-1/2 relative bg-slate-950 dark">
+<header class="fixed top-0 w-1/2 z-50 bg-slate-900/80 backdrop-blur-xl shadow-sm flex items-center justify-between px-6 h-16 left-1/2">
+<div class="flex items-center gap-3">
+<span class="text-xl font-bold text-blue-400 tracking-tight">SecureID V2</span>
+<span class="px-2 py-1 bg-blue-900/40 text-[10px] font-bold text-blue-300 rounded-full uppercase tracking-widest">Dark Mode</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-slate-400 hover:bg-slate-800 p-2 rounded-full transition-colors">notifications</button>
+<button class="material-symbols-outlined text-slate-400 hover:bg-slate-800 p-2 rounded-full transition-colors">help</button>
+</div>
+</header>
+<main class="pt-24 pb-20 px-12 max-w-5xl mx-auto">
+<div class="mb-8">
+<h1 class="text-3xl font-bold text-slate-100 tracking-tight mb-2">Perjanjian Kerjasama Operasional</h1>
+<p class="text-slate-400">Review dan bubuhkan tanda tangan pada area yang telah ditentukan.</p>
+</div>
+<div class="space-y-12 pb-32">
+<!-- Page 1 (Dark) -->
+<div class="bg-slate-900 border border-slate-800 shadow-2xl rounded-xl p-16 relative aspect-[1/1.41]">
+<div class="absolute top-8 right-8 text-xs font-mono text-slate-600">PAGE 01 / 03</div>
+<div class="space-y-6 opacity-40">
+<div class="h-4 bg-slate-700 rounded w-3/4"></div>
+<div class="h-4 bg-slate-700 rounded w-full"></div>
+<div class="h-4 bg-slate-700 rounded w-5/6"></div>
+<div class="h-4 bg-slate-700 rounded w-full"></div>
+<div class="h-32"></div>
+<div class="h-4 bg-slate-700 rounded w-2/3"></div>
+<div class="h-4 bg-slate-700 rounded w-full"></div>
+</div>
+<!-- Signature Box 1 (Active) -->
+<div class="absolute bottom-24 right-16 group">
+<div class="bg-blue-900/20 border-2 border-dashed border-blue-400/40 p-6 rounded-lg w-64 h-32 flex flex-col items-center justify-center cursor-pointer hover:bg-blue-800/20 transition-all border-blue-500 signature-glow">
+<span class="material-symbols-outlined text-blue-400 text-3xl mb-2">edit_square</span>
+<span class="text-xs font-bold text-blue-400 uppercase tracking-widest">Tanda Tangan Di Sini</span>
+</div>
+<div class="mt-2 text-center text-[10px] font-bold text-blue-300 tracking-wider">PIHAK PERTAMA</div>
+</div>
+</div>
+</div>
+<!-- Floating Guidance Overlay (Dark) -->
+<div class="fixed bottom-10 right-10 flex flex-col items-end gap-3 z-50">
+<div class="relative group">
+<div class="absolute -top-12 right-0 bg-slate-100 text-slate-900 text-xs py-2 px-4 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap shadow-xl">
+                            Klik untuk lompat ke area tanda tangan berikutnya
+                            <div class="absolute bottom-[-6px] right-6 w-3 h-3 bg-slate-100 rotate-45"></div>
+</div>
+<button class="flex items-center gap-3 bg-blue-600 text-white px-6 py-4 rounded-full font-bold shadow-2xl hover:bg-blue-500 hover:scale-105 active:scale-95 transition-all">
+<span>Next Sign Area</span>
+<span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+</main>
+</div>
+</div>
+<!-- Multi-page Navigator Sidebar (Floating Left Center) -->
+<nav class="fixed left-6 top-1/2 -translate-y-1/2 flex flex-col gap-4 z-50">
+<div class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md p-2 rounded-full shadow-lg border border-outline-variant/10 flex flex-col gap-2">
+<button class="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-xs">1</button>
+<button class="w-10 h-10 rounded-full hover:bg-surface-container-high dark:hover:bg-slate-800 flex items-center justify-center font-bold text-xs text-on-surface-variant">2</button>
+<button class="w-10 h-10 rounded-full hover:bg-surface-container-high dark:hover:bg-slate-800 flex items-center justify-center font-bold text-xs text-on-surface-variant">3</button>
+</div>
+</nav>
+<!-- Global Progress Bar -->
+<div class="fixed bottom-0 left-0 w-full h-1.5 bg-surface-container-high dark:bg-slate-800 z-[60]">
+<div class="h-full bg-primary w-[33%] transition-all duration-500"></div>
+</div>
+</body></html>

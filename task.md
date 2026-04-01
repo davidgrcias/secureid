@@ -7,7 +7,7 @@
 > - **DILARANG KERAS** menjalankan `npm install axios` tanpa pin versi. Harus selalu menggunakan `"axios": "1.14.0"`.
 > - **SELALU** jalankan `npm install --ignore-scripts` sebagai langkah pencegahan.
 
-## 🏁 Phase 0: Foundation & Scaffolding (WIP)
+## 🏁 Phase 0: Foundation & Scaffolding
 - [x] Initialize Backend (Express + TypeScript)
 - [x] Configure Environment Variables & Basic Middleware
 - [x] Database Connection (Supabase/PostgreSQL)
@@ -21,38 +21,38 @@
 ---
 
 ## 🔒 Phase 1: Auth & User Management
-- [ ] [ ] Backend: Auth Routes & JWT Logic
-- [ ] [ ] Frontend: Login & Registration Pages
-- [ ] [ ] e-KYC Verification Flow (KTP + Selfie)
-- [ ] [ ] Liveness Check Simulation
+- [x] Backend: Auth Routes & JWT Logic
+- [x] Frontend: Login & Registration Pages
+- [x] e-KYC Verification Flow (KTP + Selfie)
+- [x] Liveness Check Simulation
 
 ---
 
 ## 📄 Phase 2: Document Workflow (CORE)
-- [ ] [ ] Document Upload API & Storage
-- [ ] [ ] Envelope Management
-- [ ] [ ] Field Builder (Annotation Studio)
-- [ ] [ ] Review Before Send Logic
+- [x] Document Upload API & Storage
+- [x] Envelope Management
+- [x] Field Builder (Annotation Studio)
+- [x] Review Before Send Logic
 
 ---
 
 ## ✒️ Phase 3: Signing Engine (CORE)
-- [ ] [ ] Public Signing Link Service
-- [ ] [ ] PDF Signing Logic (pdf-lib & Crypto)
-- [ ] [ ] Signature Creation Modal (Draw/Type/Upload)
-- [ ] [ ] Sequential Signing Orchestration
+- [x] Public Signing Link Service
+- [x] PDF Signing Logic (pdf-lib & Crypto)
+- [x] Signature Creation Modal (Draw/Type/Upload)
+- [x] Sequential Signing Orchestration
 
 ---
 
 ## 🔔 Phase 4: Notifications & UI Polish
-- [ ] [ ] Email Notifications (Nodemailer)
-- [ ] [ ] Real-time Notifications (Socket.io)
-- [ ] [ ] Success/Error Empty States
+- [x] Email Notifications (Nodemailer)
+- [x] Real-time Notifications (Socket.io)
+- [x] Success/Error Empty States
 
 ---
 
 ## 🏢 Phase 5: Enterprise & Production Ready
-- [ ] [ ] Team Management & RBAC
-- [ ] [ ] Dark Mode Compliance
-- [ ] [ ] Landing & Pricing Pages
-- [ ] [ ] SEO & Performance Optimization
+- [x] Team Management & RBAC
+- [x] Dark Mode Compliance
+- [x] Landing & Pricing Pages
+- [x] SEO & Performance Optimization

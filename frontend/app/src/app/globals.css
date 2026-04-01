@@ -1,0 +1,77 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f8f9ff;
+  --surface: #f8f9ff;
+  --surface-container-low: #eff4ff;
+  --surface-container: #e5eeff;
+  --surface-container-high: #dee9fc;
+  --surface-container-highest: #d8e3f6;
+  --surface-container-lowest: #ffffff;
+  --primary: #003d9b;
+  --primary-container: #0052cc;
+  --secondary: #006e2a;
+  --on-primary: #ffffff;
+  --on-primary-container: #c4d2ff;
+  --on-surface: #111c2a;
+  --on-surface-variant: #434654;
+  --outline: #737685;
+  --outline-variant: #c3c6d6;
+  --error: #ba1a1a;
+  --error-container: #ffdad6;
+}
+
+[data-theme="dark"] {
+  --background: #0d1424;
+  --surface: #0d1424;
+  --surface-container-low: #111a2b;
+  --surface-container: #162133;
+  --surface-container-high: #1b2a42;
+  --surface-container-highest: #213454;
+  --surface-container-lowest: #0f1c33;
+  --primary: #93b7ff;
+  --primary-container: #5f93ff;
+  --secondary: #89e3a2;
+  --on-primary: #0f1c33;
+  --on-primary-container: #dce8ff;
+  --on-surface: #f0f3fa;
+  --on-surface-variant: #b8c1d4;
+  --outline: #8d9ab7;
+  --outline-variant: #354864;
+  --error: #ffb4ab;
+  --error-container: #5f2018;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-container-low: var(--surface-container-low);
+  --color-surface-container: var(--surface-container);
+  --color-surface-container-high: var(--surface-container-high);
+  --color-surface-container-highest: var(--surface-container-highest);
+  --color-surface-container-lowest: var(--surface-container-lowest);
+  --color-primary: var(--primary);
+  --color-primary-container: var(--primary-container);
+  --color-secondary: var(--secondary);
+  --color-on-primary: var(--on-primary);
+  --color-on-primary-container: var(--on-primary-container);
+  --color-on-surface: var(--on-surface);
+  --color-on-surface-variant: var(--on-surface-variant);
+  --color-outline: var(--outline);
+  --color-outline-variant: var(--outline-variant);
+  --color-error: var(--error);
+  --color-error-container: var(--error-container);
+  --font-sans: var(--font-inter);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--on-surface);
+  font-family: var(--font-inter), "Segoe UI", sans-serif;
+  transition: background-color 240ms ease, color 240ms ease;
+}
+
+button,
+a {
+  transition: all 300ms ease-out;
+}

@@ -41,9 +41,9 @@ export default function Home() {
             <div className="h-[380px] rounded-[1.5rem] bg-gradient-to-br from-[#0F1C33] via-[#162B4B] to-[#1C3C73] p-6">
               <p className="text-sm font-semibold text-on-primary-container">Dashboard Preview</p>
               <div className="mt-6 grid grid-cols-3 gap-3">
-                <div className="rounded-xl bg-white/10 p-3 text-xs text-white/90">Total 128</div>
-                <div className="rounded-xl bg-white/10 p-3 text-xs text-white/90">Pending 14</div>
-                <div className="rounded-xl bg-white/10 p-3 text-xs text-white/90">Selesai 112</div>
+                <div className="rounded-xl bg-white/10 p-3 text-xs text-white/90">Workflow Dokumen</div>
+                <div className="rounded-xl bg-white/10 p-3 text-xs text-white/90">Aksi Penandatangan</div>
+                <div className="rounded-xl bg-white/10 p-3 text-xs text-white/90">Audit Trail</div>
               </div>
               <div className="mt-6 rounded-2xl bg-white/8 p-5">
                 <p className="text-xs uppercase tracking-[0.08em] text-white/80">Aktivitas Terkini</p>

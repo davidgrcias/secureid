@@ -357,7 +357,7 @@ export async function createEnvelope(input: {
             status,
             access_token
           )
-          VALUES ($1, $2, $3, $4, $5, 'pending', $6)
+          VALUES ($1, $2, $3, $4, $5, $6, 'pending', $7)
           RETURNING
             id,
             envelope_id,

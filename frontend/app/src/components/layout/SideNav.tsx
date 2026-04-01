@@ -94,12 +94,13 @@ export default function SideNav({ open, onClose }: SideNavProps) {
           })}
         </nav>
 
-        <button
-          type="button"
-          className="mt-auto rounded-xl bg-gradient-to-r from-primary to-primary-container px-4 py-3 text-sm font-bold text-on-primary shadow-[0_12px_30px_rgba(0,61,155,0.35)]"
+        <Link
+          href="/dashboard/send"
+          onClick={onClose}
+          className="mt-auto rounded-xl bg-gradient-to-r from-primary to-primary-container px-4 py-3 text-center text-sm font-bold text-on-primary shadow-[0_12px_30px_rgba(0,61,155,0.35)]"
         >
           Mulai Tanda Tangan
-        </button>
+        </Link>
 
         <button
           type="button"

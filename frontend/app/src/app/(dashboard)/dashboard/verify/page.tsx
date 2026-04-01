@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Camera,
   CheckCircle2,
@@ -18,15 +18,109 @@ import {
   type VerificationOverview
 } from "@/lib/verification";
 
-const livenessInstructions = ["Berkedip sekarang", "Putar wajah ke kiri", "Senyum natural"];
+type LivenessStepId = "blink" | "mouth_open" | "smile";
+
+type LivenessStep = {
+  id: LivenessStepId;
+  label: string;
+  hint: string;
+};
+
+type LivenessStepState = Record<LivenessStepId, boolean>;
+
+type BlendshapeCategory = {
+  categoryName: string;
+  score: number;
+};
+
+type FaceLandmarkerResult = {
+  faceLandmarks?: unknown[];
+  faceBlendshapes?: Array<{
+    categories?: BlendshapeCategory[];
+  }>;
+};
+
+type FaceLandmarkerLike = {
+  detectForVideo: (video: HTMLVideoElement, timestampMs: number) => FaceLandmarkerResult;
+  close?: () => void;
+};
+
+const livenessSteps: LivenessStep[] = [
+  {
+    id: "blink",
+    label: "Berkedip sekali",
+    hint: "Kedipkan kedua mata sekali dengan jelas."
+  },
+  {
+    id: "mouth_open",
+    label: "Buka mulut",
+    hint: "Buka mulut sebentar lalu kembali normal."
+  },
+  {
+    id: "smile",
+    label: "Senyum natural",
+    hint: "Berikan senyum natural ke arah kamera."
+  }
+];
+
+const initialLivenessState: LivenessStepState = {
+  blink: false,
+  mouth_open: false,
+  smile: false
+};
+
+const MP_WASM_URL = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/wasm";
+const MP_FACE_MODEL_URL =
+  "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task";
+
+function stopMediaStream(stream: MediaStream | null): void {
+  stream?.getTracks().forEach((track) => track.stop());
+}
+
+function scoreOf(categories: BlendshapeCategory[], ...names: string[]): number {
+  return names.reduce((highest, name) => {
+    const value = categories.find((item) => item.categoryName === name)?.score ?? 0;
+    return Math.max(highest, value);
+  }, 0);
+}
+
+async function blobFromVideo(video: HTMLVideoElement): Promise<Blob> {
+  const canvas = document.createElement("canvas");
+  canvas.width = video.videoWidth || 640;
+  canvas.height = video.videoHeight || 480;
+
+  const context = canvas.getContext("2d");
+  if (!context) {
+    throw new Error("Canvas context tidak tersedia.");
+  }
+
+  context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+  return await new Promise<Blob>((resolve, reject) => {
+    canvas.toBlob((blob) => {
+      if (!blob) {
+        reject(new Error("Gagal mengambil frame kamera."));
+        return;
+      }
+
+      resolve(blob);
+    }, "image/jpeg", 0.95);
+  });
+}
 
 export default function VerifyPage() {
   const [ktpFile, setKtpFile] = useState<File | null>(null);
   const [ktpBackFile, setKtpBackFile] = useState<File | null>(null);
   const [selfieFile, setSelfieFile] = useState<File | null>(null);
 
+  const [isSelfieCameraOpen, setIsSelfieCameraOpen] = useState(false);
+  const [isOpeningSelfieCamera, setIsOpeningSelfieCamera] = useState(false);
+
   const [isLivenessOpen, setIsLivenessOpen] = useState(false);
+  const [isPreparingLiveness, setIsPreparingLiveness] = useState(false);
   const [livenessStepIndex, setLivenessStepIndex] = useState(0);
+  const [livenessStepState, setLivenessStepState] = useState<LivenessStepState>(initialLivenessState);
+  const [livenessHint, setLivenessHint] = useState<string>(livenessSteps[0].hint);
   const [isLivenessSuccess, setIsLivenessSuccess] = useState(false);
 
   const [overview, setOverview] = useState<VerificationOverview | null>(null);
@@ -39,6 +133,17 @@ export default function VerifyPage() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
+  const selfieVideoRef = useRef<HTMLVideoElement | null>(null);
+  const selfieStreamRef = useRef<MediaStream | null>(null);
+
+  const livenessVideoRef = useRef<HTMLVideoElement | null>(null);
+  const livenessStreamRef = useRef<MediaStream | null>(null);
+  const livenessAnimationFrameRef = useRef<number | null>(null);
+  const livenessStepStateRef = useRef<LivenessStepState>(initialLivenessState);
+  const isLivenessOpenRef = useRef(false);
+  const livenessHintRef = useRef(livenessSteps[0].hint);
+  const faceLandmarkerRef = useRef<FaceLandmarkerLike | null>(null);
+
   const latestKtp = overview?.latestByType.ktp_photo;
   const latestSelfie = overview?.latestByType.selfie;
   const latestLiveness = overview?.latestByType.liveness;
@@ -47,20 +152,288 @@ export default function VerifyPage() {
   const isSelfieReady = latestSelfie?.status === "verified";
   const isLivenessVerified = latestLiveness?.status === "verified";
 
-  const currentInstruction = livenessInstructions[livenessStepIndex] ?? livenessInstructions[0];
+  const currentInstruction = livenessSteps[livenessStepIndex]?.label ?? livenessSteps[0].label;
 
   const progressPercent = useMemo(() => {
-    const total = livenessInstructions.length;
-    const current = isLivenessSuccess ? total : livenessStepIndex + 1;
-    return Math.round((current / total) * 100);
-  }, [isLivenessSuccess, livenessStepIndex]);
+    const completed = livenessSteps.filter((step) => livenessStepState[step.id]).length;
+    return Math.round((completed / livenessSteps.length) * 100);
+  }, [livenessStepState]);
 
   async function refreshOverview(): Promise<void> {
     const data = await getVerificationOverview();
     setOverview(data);
     if (data.latestByType.liveness?.status === "verified") {
       setIsLivenessSuccess(true);
+      setLivenessStepState({ ...initialLivenessState, blink: true, mouth_open: true, smile: true });
+      setLivenessStepIndex(livenessSteps.length - 1);
+      updateLivenessHint("Liveness sudah terverifikasi oleh sistem.");
     }
+  }
+
+  function updateLivenessHint(nextHint: string): void {
+    if (livenessHintRef.current === nextHint) {
+      return;
+    }
+
+    livenessHintRef.current = nextHint;
+    setLivenessHint(nextHint);
+  }
+
+  function resetLivenessState(): void {
+    const nextState = { ...initialLivenessState };
+    livenessStepStateRef.current = nextState;
+    setLivenessStepState(nextState);
+    setLivenessStepIndex(0);
+    updateLivenessHint(livenessSteps[0].hint);
+    setIsLivenessSuccess(false);
+  }
+
+  function clearSelfieCamera(): void {
+    if (selfieVideoRef.current) {
+      selfieVideoRef.current.srcObject = null;
+    }
+
+    stopMediaStream(selfieStreamRef.current);
+    selfieStreamRef.current = null;
+  }
+
+  function clearLivenessSession(): void {
+    if (livenessAnimationFrameRef.current !== null) {
+      window.cancelAnimationFrame(livenessAnimationFrameRef.current);
+      livenessAnimationFrameRef.current = null;
+    }
+
+    isLivenessOpenRef.current = false;
+
+    if (livenessVideoRef.current) {
+      livenessVideoRef.current.srcObject = null;
+    }
+
+    stopMediaStream(livenessStreamRef.current);
+    livenessStreamRef.current = null;
+  }
+
+  async function ensureFaceLandmarker(): Promise<FaceLandmarkerLike> {
+    if (faceLandmarkerRef.current) {
+      return faceLandmarkerRef.current;
+    }
+
+    const { FaceLandmarker, FilesetResolver } = await import("@mediapipe/tasks-vision");
+    const vision = await FilesetResolver.forVisionTasks(MP_WASM_URL);
+
+    let landmarker: FaceLandmarkerLike;
+
+    try {
+      landmarker = (await FaceLandmarker.createFromOptions(vision, {
+        baseOptions: {
+          modelAssetPath: MP_FACE_MODEL_URL,
+          delegate: "GPU"
+        },
+        runningMode: "VIDEO",
+        numFaces: 1,
+        outputFaceBlendshapes: true
+      })) as FaceLandmarkerLike;
+    } catch {
+      landmarker = (await FaceLandmarker.createFromOptions(vision, {
+        baseOptions: {
+          modelAssetPath: MP_FACE_MODEL_URL
+        },
+        runningMode: "VIDEO",
+        numFaces: 1,
+        outputFaceBlendshapes: true
+      })) as FaceLandmarkerLike;
+    }
+
+    faceLandmarkerRef.current = landmarker;
+    return landmarker;
+  }
+
+  function completeLivenessStep(stepId: LivenessStepId): void {
+    setLivenessStepState((current) => {
+      if (current[stepId]) {
+        return current;
+      }
+
+      const nextState = {
+        ...current,
+        [stepId]: true
+      };
+
+      livenessStepStateRef.current = nextState;
+      return nextState;
+    });
+  }
+
+  function runLivenessDetectionLoop(): void {
+    const video = livenessVideoRef.current;
+    const detector = faceLandmarkerRef.current;
+
+    if (!video || !detector) {
+      return;
+    }
+
+    if (livenessAnimationFrameRef.current !== null) {
+      window.cancelAnimationFrame(livenessAnimationFrameRef.current);
+      livenessAnimationFrameRef.current = null;
+    }
+
+    const detect = (): void => {
+      const activeVideo = livenessVideoRef.current;
+      const activeDetector = faceLandmarkerRef.current;
+
+      if (!activeVideo || !activeDetector || !isLivenessOpenRef.current) {
+        return;
+      }
+
+      if (activeVideo.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
+        const result = activeDetector.detectForVideo(activeVideo, performance.now());
+        const hasFace = (result.faceLandmarks?.length ?? 0) > 0;
+
+        if (!hasFace) {
+          updateLivenessHint("Wajah belum terdeteksi. Pastikan wajah berada di tengah frame.");
+        } else {
+          const categories = result.faceBlendshapes?.[0]?.categories ?? [];
+          const blinkScore = scoreOf(categories, "eyeBlinkLeft", "eyeBlinkRight");
+          const mouthOpenScore = scoreOf(categories, "jawOpen");
+          const smileScore = scoreOf(categories, "mouthSmileLeft", "mouthSmileRight");
+
+          const nextStep = livenessSteps.find((step) => !livenessStepStateRef.current[step.id]);
+
+          if (!nextStep) {
+            setIsLivenessSuccess(true);
+            updateLivenessHint("Semua tantangan liveness selesai. Simpan hasil verifikasi.");
+          } else {
+            setIsLivenessSuccess(false);
+            updateLivenessHint(nextStep.hint);
+
+            if (nextStep.id === "blink" && blinkScore >= 0.45) {
+              completeLivenessStep("blink");
+            }
+
+            if (nextStep.id === "mouth_open" && mouthOpenScore >= 0.35) {
+              completeLivenessStep("mouth_open");
+            }
+
+            if (nextStep.id === "smile" && smileScore >= 0.5) {
+              completeLivenessStep("smile");
+            }
+          }
+        }
+      }
+
+      livenessAnimationFrameRef.current = window.requestAnimationFrame(detect);
+    };
+
+    livenessAnimationFrameRef.current = window.requestAnimationFrame(detect);
+  }
+
+  async function openSelfieCamera(): Promise<void> {
+    try {
+      setErrorMessage(null);
+      setSuccessMessage(null);
+      setIsOpeningSelfieCamera(true);
+
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: false,
+        video: {
+          facingMode: "user",
+          width: { ideal: 1280 },
+          height: { ideal: 720 }
+        }
+      });
+
+      selfieStreamRef.current = stream;
+      setIsSelfieCameraOpen(true);
+
+      if (selfieVideoRef.current) {
+        selfieVideoRef.current.srcObject = stream;
+        await selfieVideoRef.current.play();
+      }
+    } catch {
+      setErrorMessage("Kamera tidak dapat diakses. Pastikan izin kamera sudah diaktifkan.");
+      clearSelfieCamera();
+      setIsSelfieCameraOpen(false);
+    } finally {
+      setIsOpeningSelfieCamera(false);
+    }
+  }
+
+  function closeSelfieCamera(): void {
+    clearSelfieCamera();
+    setIsSelfieCameraOpen(false);
+  }
+
+  async function captureSelfieFromCamera(): Promise<void> {
+    if (!selfieVideoRef.current) {
+      return;
+    }
+
+    try {
+      setErrorMessage(null);
+      setSuccessMessage(null);
+      setIsUploadingSelfie(true);
+
+      const blob = await blobFromVideo(selfieVideoRef.current);
+      const file = new File([blob], `selfie-${Date.now()}.jpg`, {
+        type: "image/jpeg"
+      });
+
+      setSelfieFile(file);
+      closeSelfieCamera();
+      await handleUpload({ file, type: "selfie" });
+    } catch {
+      setErrorMessage("Gagal mengambil foto selfie dari kamera.");
+    } finally {
+      setIsUploadingSelfie(false);
+    }
+  }
+
+  async function openLivenessModal(): Promise<void> {
+    if (!isKtpReady || !isSelfieReady) {
+      return;
+    }
+
+    try {
+      setErrorMessage(null);
+      setSuccessMessage(null);
+      setIsPreparingLiveness(true);
+      resetLivenessState();
+      clearLivenessSession();
+
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: false,
+        video: {
+          facingMode: "user",
+          width: { ideal: 1280 },
+          height: { ideal: 720 }
+        }
+      });
+
+      livenessStreamRef.current = stream;
+  isLivenessOpenRef.current = true;
+      setIsLivenessOpen(true);
+
+      if (livenessVideoRef.current) {
+        livenessVideoRef.current.srcObject = stream;
+        await livenessVideoRef.current.play();
+      }
+
+      await ensureFaceLandmarker();
+      runLivenessDetectionLoop();
+    } catch {
+      setErrorMessage("Liveness check tidak dapat dimulai. Periksa izin kamera lalu coba lagi.");
+      clearLivenessSession();
+      isLivenessOpenRef.current = false;
+      setIsLivenessOpen(false);
+    } finally {
+      setIsPreparingLiveness(false);
+    }
+  }
+
+  function closeLivenessModal(): void {
+    isLivenessOpenRef.current = false;
+    clearLivenessSession();
+    setIsLivenessOpen(false);
   }
 
   useEffect(() => {
@@ -77,7 +450,12 @@ export default function VerifyPage() {
 
         setOverview(data);
         if (data.latestByType.liveness?.status === "verified") {
+          const verifiedState = { ...initialLivenessState, blink: true, mouth_open: true, smile: true };
+          livenessStepStateRef.current = verifiedState;
+          setLivenessStepState(verifiedState);
+          setLivenessStepIndex(livenessSteps.length - 1);
           setIsLivenessSuccess(true);
+          updateLivenessHint("Liveness sudah terverifikasi oleh sistem.");
         }
       } catch {
         if (!mounted) {
@@ -96,29 +474,25 @@ export default function VerifyPage() {
 
     return () => {
       mounted = false;
+      clearSelfieCamera();
+      clearLivenessSession();
+      faceLandmarkerRef.current?.close?.();
+      faceLandmarkerRef.current = null;
     };
   }, []);
 
   useEffect(() => {
-    if (!isLivenessOpen) {
+    livenessStepStateRef.current = livenessStepState;
+
+    const nextStepIndex = livenessSteps.findIndex((step) => !livenessStepState[step.id]);
+    if (nextStepIndex === -1) {
+      setLivenessStepIndex(livenessSteps.length - 1);
+      setIsLivenessSuccess(true);
       return;
     }
 
-    if (isLivenessSuccess) {
-      return;
-    }
-
-    const timer = window.setTimeout(() => {
-      if (livenessStepIndex >= livenessInstructions.length - 1) {
-        setIsLivenessSuccess(true);
-        return;
-      }
-
-      setLivenessStepIndex((current) => current + 1);
-    }, 1800);
-
-    return () => window.clearTimeout(timer);
-  }, [isLivenessOpen, isLivenessSuccess, livenessStepIndex]);
+    setLivenessStepIndex(nextStepIndex);
+  }, [livenessStepState]);
 
   async function handleUpload(input: {
     file: File;
@@ -153,23 +527,11 @@ export default function VerifyPage() {
     }
   }
 
-  function openLivenessModal(): void {
-    if (!isKtpReady || !isSelfieReady) {
+  async function submitLivenessResult(): Promise<void> {
+    if (!isLivenessSuccess) {
       return;
     }
 
-    setLivenessStepIndex(0);
-    setIsLivenessSuccess(false);
-    setIsLivenessOpen(true);
-    setErrorMessage(null);
-    setSuccessMessage(null);
-  }
-
-  function closeLivenessModal(): void {
-    setIsLivenessOpen(false);
-  }
-
-  async function submitLivenessResult(): Promise<void> {
     setErrorMessage(null);
     setSuccessMessage(null);
 
@@ -177,12 +539,12 @@ export default function VerifyPage() {
       setIsSubmittingLiveness(true);
       await submitLivenessVerification({
         passed: true,
-        steps: livenessInstructions,
+        steps: livenessSteps.map((step) => step.label),
         score: 1
       });
       await refreshOverview();
       setSuccessMessage("Liveness check berhasil direkam ke sistem.");
-      setIsLivenessOpen(false);
+      closeLivenessModal();
     } catch {
       setErrorMessage("Gagal menyimpan hasil liveness. Coba lagi.");
     } finally {
@@ -196,7 +558,7 @@ export default function VerifyPage() {
         <p className="text-xs font-bold uppercase tracking-[0.08em] text-primary">Verifikasi Identitas</p>
         <h1 className="mt-3 text-3xl font-black text-on-surface sm:text-4xl">e-KYC Workflow</h1>
         <p className="mt-2 max-w-3xl text-sm text-on-surface-variant sm:text-base">
-          Lengkapi upload e-KTP, selfie, lalu proses liveness check agar status verifikasi akun aktif di database produksi.
+          Lengkapi upload e-KTP, selfie, lalu proses liveness check berbasis kamera dan deteksi wajah on-device.
         </p>
 
         <div className="mt-6 grid gap-3 sm:grid-cols-3">
@@ -314,15 +676,29 @@ export default function VerifyPage() {
                 }}
               />
             </label>
+
+            <button
+              type="button"
+              onClick={() => void openSelfieCamera()}
+              disabled={isOpeningSelfieCamera || isUploadingSelfie}
+              className="mt-3 w-full rounded-xl bg-surface-container px-4 py-3 text-sm font-semibold text-on-surface disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {isOpeningSelfieCamera ? "Membuka Kamera..." : "Buka Kamera Selfie"}
+            </button>
+
             {isUploadingSelfie ? <p className="mt-2 text-xs text-on-surface-variant">Mengunggah...</p> : null}
 
             <button
               type="button"
-              onClick={openLivenessModal}
-              disabled={!isKtpReady || !isSelfieReady || isSubmittingLiveness}
+              onClick={() => void openLivenessModal()}
+              disabled={!isKtpReady || !isSelfieReady || isPreparingLiveness || isSubmittingLiveness}
               className="mt-4 w-full rounded-xl bg-gradient-to-r from-primary to-primary-container px-4 py-3 text-sm font-bold text-on-primary disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {isLivenessVerified ? "Liveness Terverifikasi" : "Mulai Liveness Check"}
+              {isPreparingLiveness
+                ? "Menyiapkan Liveness..."
+                : isLivenessVerified
+                  ? "Liveness Terverifikasi"
+                  : "Mulai Liveness Check"}
             </button>
           </article>
 
@@ -346,57 +722,122 @@ export default function VerifyPage() {
         </aside>
       </div>
 
-      {isLivenessOpen ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#091229]/90 p-4">
+      {isSelfieCameraOpen ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#091229]/85 p-4">
           <div className="w-full max-w-2xl rounded-3xl border border-white/10 bg-gradient-to-br from-[#102347] to-[#07152f] p-6 text-white shadow-[0_24px_70px_rgba(7,21,47,0.8)]">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs uppercase tracking-[0.08em] text-white/70">Sesi Keamanan</p>
-                <h3 className="text-2xl font-black">Verifikasi Wajah</h3>
+                <p className="text-xs uppercase tracking-[0.08em] text-white/70">Kamera Selfie</p>
+                <h3 className="text-2xl font-black">Ambil Selfie Sekarang</h3>
               </div>
               <button
                 type="button"
-                onClick={closeLivenessModal}
+                onClick={closeSelfieCamera}
                 className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white"
+                aria-label="Tutup kamera selfie"
               >
                 <X className="h-4 w-4" />
               </button>
             </div>
 
-            <div className="mt-8 flex flex-col items-center gap-6">
-              <div className="relative flex h-64 w-52 items-center justify-center rounded-[999px] border-4 border-[#67ff9d]/80 bg-white/10">
-                <div className="h-56 w-44 rounded-[999px] bg-gradient-to-b from-white/60 to-white/20" />
-                <div className="absolute inset-x-0 top-1/2 h-0.5 bg-[#67ff9d]" />
+            <div className="mt-6 overflow-hidden rounded-2xl border border-white/15 bg-black/40">
+              <video ref={selfieVideoRef} autoPlay muted playsInline className="h-[360px] w-full object-cover" />
+            </div>
+
+            <div className="mt-5 flex flex-wrap gap-3">
+              <button
+                type="button"
+                onClick={closeSelfieCamera}
+                className="rounded-xl bg-white/15 px-5 py-3 text-sm font-semibold text-white"
+              >
+                Batal
+              </button>
+              <button
+                type="button"
+                onClick={() => void captureSelfieFromCamera()}
+                disabled={isUploadingSelfie}
+                className="rounded-xl bg-[#1f59d8] px-5 py-3 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {isUploadingSelfie ? "Menyimpan..." : "Gunakan Foto Ini"}
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {isLivenessOpen ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#091229]/90 p-4">
+          <div className="w-full max-w-3xl rounded-3xl border border-white/10 bg-gradient-to-br from-[#102347] to-[#07152f] p-6 text-white shadow-[0_24px_70px_rgba(7,21,47,0.8)]">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs uppercase tracking-[0.08em] text-white/70">Sesi Keamanan</p>
+                <h3 className="text-2xl font-black">Liveness Face Check</h3>
+              </div>
+              <button
+                type="button"
+                onClick={closeLivenessModal}
+                className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white"
+                aria-label="Tutup liveness"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <div className="mt-6 grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
+              <div className="overflow-hidden rounded-2xl border border-white/15 bg-black/40">
+                <video ref={livenessVideoRef} autoPlay muted playsInline className="h-[360px] w-full object-cover" />
               </div>
 
-              <div className="w-full max-w-sm rounded-2xl bg-white/10 p-4 text-center">
-                <p className="text-xs uppercase tracking-[0.08em] text-white/70">Instruksi</p>
-                <p className="mt-2 text-2xl font-black">{isLivenessSuccess ? "Wajah Terdeteksi" : currentInstruction}</p>
+              <div className="space-y-4 rounded-2xl bg-white/10 p-4">
+                <p className="text-xs uppercase tracking-[0.08em] text-white/75">Instruksi Saat Ini</p>
+                <p className="text-xl font-black">{isLivenessSuccess ? "Semua tantangan selesai" : currentInstruction}</p>
+                <p className="text-sm text-white/85">{livenessHint}</p>
+
+                <div className="h-2 w-full rounded-full bg-white/20">
+                  <div
+                    className="h-2 rounded-full bg-[#43e06f] transition-all duration-300"
+                    style={{ width: `${progressPercent}%` }}
+                  />
+                </div>
+
+                <ul className="space-y-2 text-sm">
+                  {livenessSteps.map((step, index) => {
+                    const done = livenessStepState[step.id];
+                    const isActive = !done && index === livenessStepIndex;
+
+                    return (
+                      <li
+                        key={step.id}
+                        className={`flex items-center gap-2 rounded-lg px-3 py-2 ${
+                          done ? "bg-[#43e06f]/25 text-white" : isActive ? "bg-white/15 text-white" : "bg-white/5 text-white/75"
+                        }`}
+                      >
+                        {done ? <CheckCircle2 className="h-4 w-4" /> : <Circle className="h-4 w-4" />}
+                        <span>{step.label}</span>
+                      </li>
+                    );
+                  })}
+                </ul>
               </div>
+            </div>
 
-              <div className="h-2 w-full max-w-sm rounded-full bg-white/20">
-                <div
-                  className="h-2 rounded-full bg-[#43e06f] transition-all duration-500"
-                  style={{ width: `${progressPercent}%` }}
-                />
-              </div>
+            <div className="mt-5 flex flex-wrap gap-3">
+              <button
+                type="button"
+                onClick={closeLivenessModal}
+                className="rounded-xl bg-white/15 px-5 py-3 text-sm font-semibold text-white"
+              >
+                Batal
+              </button>
 
-              <p className="text-sm text-white/80">
-                {isLivenessSuccess
-                  ? "Proses liveness selesai. Simpan hasil untuk memperbarui status verifikasi."
-                  : `Tahap ${livenessStepIndex + 1} dari ${livenessInstructions.length}`}
-              </p>
-
-              {isLivenessSuccess ? (
-                <button
-                  type="button"
-                  onClick={() => void submitLivenessResult()}
-                  disabled={isSubmittingLiveness}
-                  className="rounded-xl bg-[#1f59d8] px-6 py-3 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-70"
-                >
-                  {isSubmittingLiveness ? "Menyimpan..." : "Simpan Hasil Verifikasi"}
-                </button>
-              ) : null}
+              <button
+                type="button"
+                onClick={() => void submitLivenessResult()}
+                disabled={!isLivenessSuccess || isSubmittingLiveness}
+                className="rounded-xl bg-[#1f59d8] px-6 py-3 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {isSubmittingLiveness ? "Menyimpan..." : "Simpan Hasil Verifikasi"}
+              </button>
             </div>
           </div>
         </div>

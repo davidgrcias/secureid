@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { resetPassword } from "@/lib/auth";
@@ -29,7 +29,7 @@ function getErrorMessage(error: unknown): string {
   return "Terjadi kesalahan saat mereset kata sandi.";
 }
 
-export default function ResetPasswordPage() {
+function ResetPasswordForm() {
   const searchParams = useSearchParams();
   const token = searchParams.get("token") ?? "";
 
@@ -107,5 +107,19 @@ export default function ResetPasswordPage() {
         </Link>
       </p>
     </section>
+  );
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense
+      fallback={
+        <section className="mx-auto w-full max-w-lg rounded-3xl bg-surface-container-lowest p-8 shadow-[0_20px_60px_rgba(17,28,42,0.08)]">
+          <p className="text-sm text-on-surface-variant">Memuat data reset password...</p>
+        </section>
+      }
+    >
+      <ResetPasswordForm />
+    </Suspense>
   );
 }

@@ -109,3 +109,7 @@ export async function sendEnvelope(envelopeId: string): Promise<void> {
 export async function archiveDocument(documentId: string): Promise<void> {
   await apiClient.delete(`/api/documents/${documentId}`);
 }
+
+export async function purgeDocument(documentId: string): Promise<void> {
+  await apiClient.delete(`/api/documents/${documentId}/purge`);
+}

@@ -8,7 +8,8 @@ import {
   archiveUserDocument,
   createDocumentRecord,
   getUserDocumentById,
-  listUserDocuments
+  listUserDocuments,
+  purgeUserDocumentDraft
 } from "../services/document.service";
 
 const router = Router();
@@ -119,6 +120,19 @@ router.get("/:id/download", authMiddleware, async (req: Request, res: Response, 
     const absolutePath = path.resolve(process.cwd(), document.filePath);
 
     res.download(absolutePath, document.originalFilename);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.delete("/:id/purge", authMiddleware, async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    if (!req.auth) {
+      throw new ApiError(401, "Tidak terautentikasi.");
+    }
+
+    await purgeUserDocumentDraft(req.auth.userId, req.params.id);
+    res.status(200).json({ message: "Dokumen draft upload berhasil dihapus permanen." });
   } catch (error) {
     next(error);
   }

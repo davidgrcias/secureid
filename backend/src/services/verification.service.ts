@@ -138,7 +138,7 @@ export async function uploadVerificationFile(input: {
     userId: input.userId,
     type: input.type,
     filePath: input.filePath,
-    status: "verified",
+    status: "pending",
     resultData: {
       source: "file_upload",
       ...(input.metadata ?? {})
@@ -166,6 +166,23 @@ export async function submitLivenessVerification(input: {
     },
     failureReason: input.passed ? undefined : "Liveness check tidak memenuhi syarat."
   });
+
+  if (input.passed) {
+    await query(
+      `
+        UPDATE verification_records
+        SET status = 'verified',
+            result_data = result_data || jsonb_build_object(
+              'validated_by', 'liveness_flow',
+              'validated_at', NOW()
+            )
+        WHERE user_id = $1
+          AND type IN ('ktp_photo', 'selfie')
+          AND status = 'pending'
+      `,
+      [input.userId]
+    );
+  }
 
   await syncUserKycStatus(input.userId);
   return record;

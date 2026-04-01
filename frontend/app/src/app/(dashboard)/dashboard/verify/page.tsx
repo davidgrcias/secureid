@@ -149,7 +149,8 @@ export default function VerifyPage() {
   const latestLiveness = overview?.latestByType.liveness;
 
   const isKtpReady = latestKtp?.status === "verified";
-  const isSelfieReady = latestSelfie?.status === "verified";
+  const isKtpUploaded = Boolean(latestKtp && latestKtp.status !== "failed");
+  const isSelfieUploaded = Boolean(latestSelfie && latestSelfie.status !== "failed");
   const isLivenessVerified = latestLiveness?.status === "verified";
 
   const currentInstruction = livenessSteps[livenessStepIndex]?.label ?? livenessSteps[0].label;
@@ -389,7 +390,7 @@ export default function VerifyPage() {
   }
 
   async function openLivenessModal(): Promise<void> {
-    if (!isKtpReady || !isSelfieReady) {
+    if (!isKtpUploaded || !isSelfieUploaded) {
       return;
     }
 
@@ -410,7 +411,7 @@ export default function VerifyPage() {
       });
 
       livenessStreamRef.current = stream;
-  isLivenessOpenRef.current = true;
+    isLivenessOpenRef.current = true;
       setIsLivenessOpen(true);
 
       if (livenessVideoRef.current) {
@@ -563,7 +564,7 @@ export default function VerifyPage() {
 
         <div className="mt-6 grid gap-3 sm:grid-cols-3">
           {["Upload e-KTP", "Selfie", "Liveness"].map((step, index) => {
-            const isDone = index === 0 ? isKtpReady : index === 1 ? isSelfieReady : isLivenessVerified;
+            const isDone = index === 0 ? isKtpUploaded : index === 1 ? isSelfieUploaded : isLivenessVerified;
 
             return (
               <article
@@ -602,7 +603,11 @@ export default function VerifyPage() {
           <article className="rounded-3xl bg-surface-container-lowest p-6">
             <div className="mb-4 flex items-center justify-between">
               <h2 className="text-lg font-bold text-on-surface">Foto Depan e-KTP</h2>
-              {isKtpReady ? <span className="text-xs font-bold text-secondary">Terverifikasi</span> : null}
+              {isKtpReady ? (
+                <span className="text-xs font-bold text-secondary">Terverifikasi</span>
+              ) : isKtpUploaded ? (
+                <span className="text-xs font-bold text-primary">Tersimpan</span>
+              ) : null}
             </div>
 
             <label className="flex min-h-52 cursor-pointer flex-col items-center justify-center rounded-2xl border border-dashed border-outline-variant/50 bg-surface-container-low p-5 text-center">
@@ -691,7 +696,7 @@ export default function VerifyPage() {
             <button
               type="button"
               onClick={() => void openLivenessModal()}
-              disabled={!isKtpReady || !isSelfieReady || isPreparingLiveness || isSubmittingLiveness}
+              disabled={!isKtpUploaded || !isSelfieUploaded || isPreparingLiveness || isSubmittingLiveness}
               className="mt-4 w-full rounded-xl bg-gradient-to-r from-primary to-primary-container px-4 py-3 text-sm font-bold text-on-primary disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isPreparingLiveness

@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { query } from "../config/database";
+import { pool, query } from "../config/database";
 import { ApiError } from "../middleware/error.middleware";
 
 type DbDocumentRow = {
@@ -197,5 +197,69 @@ export async function archiveUserDocument(userId: string, documentId: string): P
 
   if (!result.rows[0]) {
     throw new ApiError(404, "Dokumen tidak ditemukan.");
+  }
+}
+
+export async function purgeUserDocumentDraft(userId: string, documentId: string): Promise<void> {
+  const client = await pool.connect();
+
+  try {
+    await client.query("BEGIN");
+
+    const documentResult = await client.query<{ id: string; file_path: string; status: string }>(
+      `
+        SELECT id, file_path, status
+        FROM documents
+        WHERE id = $1 AND uploader_id = $2
+        LIMIT 1
+        FOR UPDATE
+      `,
+      [documentId, userId]
+    );
+
+    const document = documentResult.rows[0];
+    if (!document) {
+      throw new ApiError(404, "Dokumen tidak ditemukan.");
+    }
+
+    if (document.status !== "uploaded") {
+      throw new ApiError(400, "Hanya dokumen draft upload yang bisa dipurge.");
+    }
+
+    const envelopeCountResult = await client.query<{ total: string }>(
+      `
+        SELECT COUNT(*)::text AS total
+        FROM envelopes
+        WHERE document_id = $1
+      `,
+      [documentId]
+    );
+
+    const totalEnvelope = Number(envelopeCountResult.rows[0]?.total ?? "0");
+    if (totalEnvelope > 0) {
+      throw new ApiError(409, "Dokumen sudah terhubung ke envelope dan tidak bisa dipurge.");
+    }
+
+    await client.query(
+      `
+        DELETE FROM documents
+        WHERE id = $1 AND uploader_id = $2
+      `,
+      [documentId, userId]
+    );
+
+    await client.query("COMMIT");
+
+    const absolutePath = path.resolve(process.cwd(), document.file_path);
+    try {
+      await fs.unlink(absolutePath);
+    } catch {
+      // Ignore missing file on disk; DB record is already cleaned.
+    }
+  } catch (error) {
+    await client.query("ROLLBACK");
+    throw error;
+  } finally {
+    client.release();
   }
 }

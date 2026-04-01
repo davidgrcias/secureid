@@ -11,8 +11,8 @@ import {
   X
 } from "lucide-react";
 import {
-  archiveDocument,
   createEnvelope,
+  purgeDocument,
   saveEnvelopeFields,
   sendEnvelope,
   uploadDocument
@@ -244,7 +244,7 @@ export default function SendPage() {
 
       if (uploadedDocumentId) {
         try {
-          await archiveDocument(uploadedDocumentId);
+          await purgeDocument(uploadedDocumentId);
         } catch {
           // Best effort cleanup for uploaded draft documents.
         }

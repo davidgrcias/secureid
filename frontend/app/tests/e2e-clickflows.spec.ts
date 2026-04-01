@@ -214,7 +214,16 @@ test("all major click actions work across public, dashboard, verify, and signing
   await page.getByRole("button", { name: "Daftar & Lanjut Verifikasi" }).click();
   await expect(page).toHaveURL(/\/dashboard\/verify$/);
 
-  await page.getByRole("button", { name: "Keluar" }).click();
+  const toggleMenuButton = page.getByRole("button", { name: "Toggle menu" });
+  await expect(toggleMenuButton).toBeVisible();
+
+  const logoutButton = page.getByRole("button", { name: "Keluar" });
+  if (!(await logoutButton.isVisible())) {
+    await toggleMenuButton.click();
+    await expect(logoutButton).toBeVisible();
+  }
+
+  await logoutButton.click();
   await expect(page).toHaveURL(/\/login$/);
 
   await loginFromUi(page, ownerEmail, ownerPassword);

@@ -266,6 +266,10 @@ export async function createEnvelope(input: {
     throw new ApiError(400, "Minimal satu penerima harus ditambahkan.");
   }
 
+  if (!input.recipients.some((recipient) => recipient.role === "signer")) {
+    throw new ApiError(400, "Minimal satu penerima dengan role signer harus ditambahkan.");
+  }
+
   const documentResult = await query<{ id: string }>(
     `
       SELECT id
@@ -679,6 +683,9 @@ export async function sendEnvelope(senderId: string, envelopeId: string): Promis
   );
 
   const signerRecipients = recipientsResult.rows.filter((recipient) => recipient.role === "signer");
+  if (signerRecipients.length === 0) {
+    throw new ApiError(400, "Envelope harus memiliki minimal satu signer sebelum dikirim.");
+  }
   let recipientsToNotify: DbRecipientRow[] = [];
 
   if (ownershipEnvelope.sequential_signing) {

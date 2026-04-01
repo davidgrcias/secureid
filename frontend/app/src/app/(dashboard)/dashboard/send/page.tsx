@@ -75,10 +75,13 @@ export default function SendPage() {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const canProceedToBuilder = useMemo(() => {
+    const hasSignerRecipient = recipients.some((recipient) => recipient.role === "signer");
+
     return Boolean(
       title.trim() &&
         file &&
         recipients.length > 0 &&
+        hasSignerRecipient &&
         recipients.every((recipient) => recipient.name.trim() && recipient.email.trim())
     );
   }, [file, recipients, title]);
@@ -115,7 +118,7 @@ export default function SendPage() {
 
   async function handleProceedToBuilder(): Promise<void> {
     if (!file || !canProceedToBuilder) {
-      setErrorMessage("Lengkapi judul, file, dan data penerima terlebih dahulu.");
+      setErrorMessage("Lengkapi judul, file, dan data penerima, serta pastikan ada minimal satu signer.");
       return;
     }
 

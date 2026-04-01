@@ -15,6 +15,11 @@ type DbVerificationRow = {
   created_at: Date | string;
 };
 
+type DbVerificationStatusRow = {
+  type: VerificationType;
+  status: VerificationStatus;
+};
+
 export type VerificationRecord = {
   id: string;
   userId: string;
@@ -128,6 +133,37 @@ async function syncUserKycStatus(userId: string): Promise<"unverified" | "pendin
   return nextKycStatus;
 }
 
+async function ensureLivenessPrerequisites(userId: string): Promise<void> {
+  const result = await query<DbVerificationStatusRow>(
+    `
+      SELECT type, status
+      FROM verification_records
+      WHERE user_id = $1
+        AND type IN ('ktp_photo', 'selfie')
+      ORDER BY created_at DESC
+    `,
+    [userId]
+  );
+
+  const latestByType = new Map<VerificationType, VerificationStatus>();
+  for (const row of result.rows) {
+    if (!latestByType.has(row.type)) {
+      latestByType.set(row.type, row.status);
+    }
+  }
+
+  const ktpStatus = latestByType.get("ktp_photo");
+  const selfieStatus = latestByType.get("selfie");
+
+  if (!ktpStatus || !selfieStatus) {
+    throw new ApiError(400, "Upload e-KTP dan selfie terlebih dahulu sebelum liveness check.");
+  }
+
+  if (ktpStatus === "failed" || selfieStatus === "failed") {
+    throw new ApiError(400, "Perbaiki dokumen verifikasi yang gagal sebelum mengulangi liveness check.");
+  }
+}
+
 export async function uploadVerificationFile(input: {
   userId: string;
   type: "ktp_photo" | "selfie";
@@ -155,6 +191,10 @@ export async function submitLivenessVerification(input: {
   steps: string[];
   score?: number;
 }): Promise<VerificationRecord> {
+  if (input.passed) {
+    await ensureLivenessPrerequisites(input.userId);
+  }
+
   const record = await createVerificationRecord({
     userId: input.userId,
     type: "liveness",

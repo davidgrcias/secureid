@@ -565,6 +565,7 @@ export default function VerifyPage() {
         <div className="mt-6 grid gap-3 sm:grid-cols-3">
           {["Upload e-KTP", "Selfie", "Liveness"].map((step, index) => {
             const isDone = index === 0 ? isKtpUploaded : index === 1 ? isSelfieUploaded : isLivenessVerified;
+            const statusLabel = index === 0 ? latestKtp?.status : index === 1 ? latestSelfie?.status : latestLiveness?.status;
 
             return (
               <article
@@ -577,7 +578,10 @@ export default function VerifyPage() {
                   ) : (
                     <Circle className="h-4 w-4 text-outline" />
                   )}
-                  <p className="font-semibold text-on-surface">{step}</p>
+                  <div>
+                    <p className="font-semibold text-on-surface">{step}</p>
+                    <p className="text-[11px] uppercase tracking-[0.06em] text-outline">{statusLabel ?? "belum"}</p>
+                  </div>
                 </div>
               </article>
             );

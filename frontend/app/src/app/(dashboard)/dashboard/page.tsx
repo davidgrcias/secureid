@@ -29,7 +29,7 @@ function mapEnvelopeStatus(status: string): string {
       return "Selesai";
     case "expired":
       return "Kedaluwarsa";
-    case "cancelled":
+    case "voided":
       return "Dibatalkan";
     default:
       return status;

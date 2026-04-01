@@ -96,7 +96,7 @@ export default function SendPage() {
 
     const activeDragging = dragging;
 
-    function onMouseMove(event: MouseEvent): void {
+    function onPointerMove(event: PointerEvent): void {
       const canvas = canvasRef.current;
       if (!canvas) {
         return;
@@ -133,12 +133,12 @@ export default function SendPage() {
       setDragging(null);
     }
 
-    window.addEventListener("mousemove", onMouseMove);
-    window.addEventListener("mouseup", onMouseUp);
+    window.addEventListener("pointermove", onPointerMove);
+    window.addEventListener("pointerup", onMouseUp);
 
     return () => {
-      window.removeEventListener("mousemove", onMouseMove);
-      window.removeEventListener("mouseup", onMouseUp);
+      window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("pointerup", onMouseUp);
     };
   }, [dragging]);
 
@@ -184,7 +184,7 @@ export default function SendPage() {
     });
   }
 
-  function startDragging(field: DraftField, event: React.MouseEvent<HTMLDivElement>): void {
+  function startDragging(field: DraftField, event: React.PointerEvent<HTMLDivElement>): void {
     const canvas = canvasRef.current;
     if (!canvas) {
       return;
@@ -475,14 +475,14 @@ export default function SendPage() {
                   fields.map((field) => (
                     <div
                       key={field.id}
-                      className="absolute cursor-move rounded-lg border-2 border-dashed border-primary bg-primary/5 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.06em] text-primary"
+                      className="absolute cursor-move touch-none rounded-lg border-2 border-dashed border-primary bg-primary/5 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.06em] text-primary"
                       style={{
                         left: `${field.positionX}%`,
                         top: `${field.positionY}%`,
                         width: `${field.width}%`,
                         height: `${field.height}%`
                       }}
-                      onMouseDown={(event) => startDragging(field, event)}
+                      onPointerDown={(event) => startDragging(field, event)}
                     >
                       {field.fieldType}
                     </div>

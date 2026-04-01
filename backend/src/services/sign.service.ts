@@ -4,6 +4,7 @@ import path from "node:path";
 import { pool, query } from "../config/database";
 import { env } from "../config/env";
 import { ApiError } from "../middleware/error.middleware";
+import { syncDocumentWorkflowStatus } from "./documentWorkflow.service";
 import { applySignatureFieldsToPdf } from "../utils/pdf";
 import { sendEnvelopeCompletedEmail, sendSigningRequestEmail } from "./email.service";
 import { createNotification } from "./notification.service";
@@ -204,9 +205,9 @@ async function getSessionByToken(token: string): Promise<DbSigningSessionRow> {
         sender.email AS sender_email,
         d.id AS document_id,
         d.title AS document_title,
-        d.file_path AS document_file_path,
+        COALESCE(e.signing_file_path, d.file_path) AS document_file_path,
         d.original_filename AS document_original_filename,
-        d.file_hash_sha256 AS document_hash_sha256
+        COALESCE(e.signing_file_hash_sha256, d.file_hash_sha256) AS document_hash_sha256
       FROM envelope_recipients er
       JOIN envelopes e ON e.id = er.envelope_id
       JOIN documents d ON d.id = e.document_id
@@ -364,9 +365,9 @@ export async function completePublicSigning(payload: SigningPayload): Promise<Si
           sender.email AS sender_email,
           d.id AS document_id,
           d.title AS document_title,
-          d.file_path AS document_file_path,
+          COALESCE(e.signing_file_path, d.file_path) AS document_file_path,
           d.original_filename AS document_original_filename,
-          d.file_hash_sha256 AS document_hash_sha256
+          COALESCE(e.signing_file_hash_sha256, d.file_hash_sha256) AS document_hash_sha256
         FROM envelope_recipients er
         JOIN envelopes e ON e.id = er.envelope_id
         JOIN documents d ON d.id = e.document_id
@@ -427,6 +428,25 @@ export async function completePublicSigning(payload: SigningPayload): Promise<Si
     );
 
     const fieldsById = new Map(fieldRowsResult.rows.map((field) => [field.id, field]));
+
+    const payloadFieldIds = new Set<string>();
+    for (const inputField of payload.fields) {
+      if (payloadFieldIds.has(inputField.fieldId)) {
+        throw new ApiError(400, `Field ${inputField.fieldId} dikirim lebih dari satu kali.`);
+      }
+
+      payloadFieldIds.add(inputField.fieldId);
+    }
+
+    for (const field of fieldRowsResult.rows) {
+      if (!field.required || field.value) {
+        continue;
+      }
+
+      if (!payloadFieldIds.has(field.id)) {
+        throw new ApiError(400, `Field ${field.id} wajib diisi.`);
+      }
+    }
 
     const updatedFields: DbFieldRow[] = [];
     for (const inputField of payload.fields) {
@@ -518,18 +538,8 @@ export async function completePublicSigning(payload: SigningPayload): Promise<Si
     }
 
     const signedFileBytes = await fs.readFile(signedAbsolutePath);
+    const documentHashBefore = session.document_hash_sha256;
     const documentHashAfter = createHash("sha256").update(signedFileBytes).digest("hex");
-
-    await client.query(
-      `
-        UPDATE documents
-        SET file_path = $2,
-            file_hash_sha256 = $3,
-            status = 'ready'
-        WHERE id = $1
-      `,
-      [session.document_id, signedRelativePath, documentHashAfter]
-    );
 
     await client.query(
       `
@@ -559,7 +569,7 @@ export async function completePublicSigning(payload: SigningPayload): Promise<Si
           field.id,
           payload.ipAddress ?? null,
           payload.userAgent ?? null,
-          session.document_hash_sha256,
+          documentHashBefore,
           documentHashAfter
         ]
       );
@@ -589,19 +599,35 @@ export async function completePublicSigning(payload: SigningPayload): Promise<Si
         `
           UPDATE envelopes
           SET status = 'completed',
-              completed_at = NOW()
+              completed_at = NOW(),
+              updated_at = NOW(),
+              signing_file_path = $2,
+              signing_file_hash_sha256 = $3
           WHERE id = $1
         `,
-        [session.envelope_id]
+        [session.envelope_id, signedRelativePath, documentHashAfter]
+      );
+
+      await client.query(
+        `
+          UPDATE documents
+          SET file_path = $2,
+              file_hash_sha256 = $3
+          WHERE id = $1
+        `,
+        [session.document_id, signedRelativePath, documentHashAfter]
       );
     } else {
       await client.query(
         `
           UPDATE envelopes
-          SET status = 'in_progress'
+          SET status = 'in_progress',
+              updated_at = NOW(),
+              signing_file_path = $2,
+              signing_file_hash_sha256 = $3
           WHERE id = $1
         `,
-        [session.envelope_id]
+        [session.envelope_id, signedRelativePath, documentHashAfter]
       );
 
       if (session.sequential_signing) {
@@ -633,6 +659,8 @@ export async function completePublicSigning(payload: SigningPayload): Promise<Si
       }
     }
 
+    await syncDocumentWorkflowStatus(client, session.document_id);
+
     await client.query(
       `
         INSERT INTO audit_logs (envelope_id, user_id, action, ip_address, user_agent, metadata)
@@ -650,13 +678,17 @@ export async function completePublicSigning(payload: SigningPayload): Promise<Si
       const signUrl = buildSignUrl(recipient.access_token);
 
       if (recipient.user_id) {
-        await createNotification({
-          userId: recipient.user_id,
-          type: "signing_request",
-          title: `Permintaan tanda tangan: ${session.envelope_title}`,
-          body: `Dokumen ${session.envelope_title} menunggu tanda tangan Anda.`,
-          actionUrl: `/sign/${recipient.access_token}`
-        });
+        try {
+          await createNotification({
+            userId: recipient.user_id,
+            type: "signing_request",
+            title: `Permintaan tanda tangan: ${session.envelope_title}`,
+            body: `Dokumen ${session.envelope_title} menunggu tanda tangan Anda.`,
+            actionUrl: `/sign/${recipient.access_token}`
+          });
+        } catch {
+          // Notification delivery should not fail signing response.
+        }
       }
 
       try {
@@ -672,13 +704,17 @@ export async function completePublicSigning(payload: SigningPayload): Promise<Si
     }
 
     if (completed) {
-      await createNotification({
-        userId: session.sender_id,
-        type: "completed",
-        title: `Dokumen selesai: ${session.envelope_title}`,
-        body: "Semua penandatangan sudah menyelesaikan proses.",
-        actionUrl: `/dashboard/documents`
-      });
+      try {
+        await createNotification({
+          userId: session.sender_id,
+          type: "completed",
+          title: `Dokumen selesai: ${session.envelope_title}`,
+          body: "Semua penandatangan sudah menyelesaikan proses.",
+          actionUrl: `/dashboard/documents`
+        });
+      } catch {
+        // Notification delivery should not fail signing response.
+      }
 
       try {
         await sendEnvelopeCompletedEmail({

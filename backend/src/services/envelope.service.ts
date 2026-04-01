@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import { env } from "../config/env";
 import { pool, query } from "../config/database";
 import { ApiError } from "../middleware/error.middleware";
+import { syncDocumentWorkflowStatus } from "./documentWorkflow.service";
 import { sendSigningReminderEmail, sendSigningRequestEmail } from "./email.service";
 import { createNotification } from "./notification.service";
 
@@ -521,7 +522,8 @@ export async function updateEnvelopeDraft(
         message = COALESCE($4, message),
         sequential_signing = COALESCE($5, sequential_signing),
         auto_reminder = COALESCE($6, auto_reminder),
-        expires_at = COALESCE($7, expires_at)
+        expires_at = COALESCE($7, expires_at),
+        updated_at = NOW()
       WHERE id = $1 AND sender_id = $2
       RETURNING
         id,
@@ -552,7 +554,7 @@ export async function updateEnvelopeDraft(
     throw new ApiError(404, "Envelope tidak ditemukan.");
   }
 
-  await createAuditLog(envelopeId, senderId, "viewed", { updated: true });
+  await createAuditLog(envelopeId, senderId, "updated", { updated: true });
 
   return mapEnvelope(envelope);
 }
@@ -625,9 +627,18 @@ export async function replaceEnvelopeFields(
     await client.query(
       `
         INSERT INTO audit_logs (envelope_id, user_id, action, metadata)
-        VALUES ($1, $2, 'viewed', $3)
+        VALUES ($1, $2, 'updated', $3)
       `,
       [envelopeId, senderId, { fieldCount: createdFields.length }]
+    );
+
+    await client.query(
+      `
+        UPDATE envelopes
+        SET updated_at = NOW()
+        WHERE id = $1
+      `,
+      [envelopeId]
     );
 
     await client.query("COMMIT");
@@ -642,89 +653,46 @@ export async function replaceEnvelopeFields(
 }
 
 export async function sendEnvelope(senderId: string, envelopeId: string): Promise<EnvelopeRecord> {
-  const ownershipEnvelope = await ensureEnvelopeOwnership(envelopeId, senderId);
-  assertDraftEnvelope(ownershipEnvelope, "mengirim envelope");
-
-  const result = await query<DbEnvelopeRow>(
-    `
-      UPDATE envelopes
-      SET status = 'sent'
-      WHERE id = $1 AND sender_id = $2
-      RETURNING
-        id,
-        document_id,
-        sender_id,
-        title,
-        message,
-        status,
-        sequential_signing,
-        auto_reminder,
-        expires_at,
-        completed_at,
-        created_at
-    `,
-    [envelopeId, senderId]
-  );
-
-  const envelope = result.rows[0];
-  if (!envelope) {
-    throw new ApiError(404, "Envelope tidak ditemukan.");
-  }
-
-  const recipientsResult = await query<DbRecipientRow>(
-    `
-      SELECT
-        id,
-        envelope_id,
-        user_id,
-        email,
-        name,
-        signing_order,
-        role,
-        status,
-        access_token,
-        signed_at
-      FROM envelope_recipients
-      WHERE envelope_id = $1
-      ORDER BY signing_order ASC
-    `,
-    [envelopeId]
-  );
-
-  const signerRecipients = recipientsResult.rows.filter((recipient) => recipient.role === "signer");
-  if (signerRecipients.length === 0) {
-    throw new ApiError(400, "Envelope harus memiliki minimal satu signer sebelum dikirim.");
-  }
+  const client = await pool.connect();
+  let envelope: DbEnvelopeRow | undefined;
   let recipientsToNotify: DbRecipientRow[] = [];
 
-  if (ownershipEnvelope.sequential_signing) {
-    const firstSigner = signerRecipients[0];
-    if (firstSigner) {
-      await query(
-        `
-          UPDATE envelope_recipients
-          SET status = CASE
-            WHEN id = $2 THEN 'notified'
-            WHEN status = 'pending' THEN 'pending'
-            ELSE status
-          END
-          WHERE envelope_id = $1
-        `,
-        [envelopeId, firstSigner.id]
-      );
+  try {
+    await client.query("BEGIN");
 
-      recipientsToNotify = [firstSigner];
-    }
-  } else {
-    const notifiedResult = await query<DbRecipientRow>(
+    const envelopeResult = await client.query<DbEnvelopeRow>(
       `
-        UPDATE envelope_recipients
-        SET status = CASE
-          WHEN role = 'signer' AND status IN ('pending', 'opened') THEN 'notified'
-          ELSE status
-        END
-        WHERE envelope_id = $1
-        RETURNING
+        SELECT
+          id,
+          document_id,
+          sender_id,
+          title,
+          message,
+          status,
+          sequential_signing,
+          auto_reminder,
+          expires_at,
+          completed_at,
+          created_at
+        FROM envelopes
+        WHERE id = $1
+          AND sender_id = $2
+        LIMIT 1
+        FOR UPDATE
+      `,
+      [envelopeId, senderId]
+    );
+
+    const ownershipEnvelope = envelopeResult.rows[0];
+    if (!ownershipEnvelope) {
+      throw new ApiError(404, "Envelope tidak ditemukan.");
+    }
+
+    assertDraftEnvelope(ownershipEnvelope, "mengirim envelope");
+
+    const recipientsResult = await client.query<DbRecipientRow>(
+      `
+        SELECT
           id,
           envelope_id,
           user_id,
@@ -735,22 +703,164 @@ export async function sendEnvelope(senderId: string, envelopeId: string): Promis
           status,
           access_token,
           signed_at
+        FROM envelope_recipients
+        WHERE envelope_id = $1
+        ORDER BY signing_order ASC
+        FOR UPDATE
       `,
       [envelopeId]
     );
 
-    recipientsToNotify = notifiedResult.rows.filter((recipient) => recipient.role === "signer" && recipient.status === "notified");
+    const signerRecipients = recipientsResult.rows.filter((recipient) => recipient.role === "signer");
+    if (signerRecipients.length === 0) {
+      throw new ApiError(400, "Envelope harus memiliki minimal satu signer sebelum dikirim.");
+    }
+
+    const fieldSummaryResult = await client.query<{ total_fields: string; signature_fields: string }>(
+      `
+        SELECT
+          COUNT(*)::text AS total_fields,
+          COUNT(*) FILTER (WHERE field_type IN ('signature', 'initial'))::text AS signature_fields
+        FROM envelope_fields
+        WHERE envelope_id = $1
+      `,
+      [envelopeId]
+    );
+
+    const totalFields = Number(fieldSummaryResult.rows[0]?.total_fields ?? "0");
+    const signatureFields = Number(fieldSummaryResult.rows[0]?.signature_fields ?? "0");
+
+    if (totalFields === 0) {
+      throw new ApiError(400, "Tambahkan minimal satu field sebelum mengirim envelope.");
+    }
+
+    if (signatureFields === 0) {
+      throw new ApiError(400, "Envelope harus memiliki minimal satu field signature atau initial.");
+    }
+
+    const updateEnvelopeResult = await client.query<DbEnvelopeRow>(
+      `
+        UPDATE envelopes e
+        SET status = 'sent',
+            updated_at = NOW(),
+            signing_file_path = d.file_path,
+            signing_file_hash_sha256 = d.file_hash_sha256
+        FROM documents d
+        WHERE e.id = $1
+          AND e.sender_id = $2
+          AND d.id = e.document_id
+        RETURNING
+          e.id,
+          e.document_id,
+          e.sender_id,
+          e.title,
+          e.message,
+          e.status,
+          e.sequential_signing,
+          e.auto_reminder,
+          e.expires_at,
+          e.completed_at,
+          e.created_at
+      `,
+      [envelopeId, senderId]
+    );
+
+    envelope = updateEnvelopeResult.rows[0];
+    if (!envelope) {
+      throw new ApiError(404, "Envelope tidak ditemukan.");
+    }
+
+    if (ownershipEnvelope.sequential_signing) {
+      const firstSigner = signerRecipients[0];
+
+      if (firstSigner) {
+        const notifiedResult = await client.query<DbRecipientRow>(
+          `
+            UPDATE envelope_recipients
+            SET status = 'notified'
+            WHERE id = $1
+              AND status IN ('pending', 'opened')
+            RETURNING
+              id,
+              envelope_id,
+              user_id,
+              email,
+              name,
+              signing_order,
+              role,
+              status,
+              access_token,
+              signed_at
+          `,
+          [firstSigner.id]
+        );
+
+        recipientsToNotify = notifiedResult.rows;
+      }
+    } else {
+      const notifiedResult = await client.query<DbRecipientRow>(
+        `
+          UPDATE envelope_recipients
+          SET status = CASE
+            WHEN role = 'signer' AND status IN ('pending', 'opened') THEN 'notified'
+            ELSE status
+          END
+          WHERE envelope_id = $1
+          RETURNING
+            id,
+            envelope_id,
+            user_id,
+            email,
+            name,
+            signing_order,
+            role,
+            status,
+            access_token,
+            signed_at
+        `,
+        [envelopeId]
+      );
+
+      recipientsToNotify = notifiedResult.rows.filter(
+        (recipient) => recipient.role === "signer" && recipient.status === "notified"
+      );
+    }
+
+    await client.query(
+      `
+        INSERT INTO audit_logs (envelope_id, user_id, action, metadata)
+        VALUES ($1, $2, 'sent', $3)
+      `,
+      [envelopeId, senderId, {}]
+    );
+
+    await syncDocumentWorkflowStatus(client, envelope.document_id);
+
+    await client.query("COMMIT");
+  } catch (error) {
+    await client.query("ROLLBACK");
+    throw error;
+  } finally {
+    client.release();
+  }
+
+  if (!envelope) {
+    throw new ApiError(500, "Gagal mengirim envelope.");
   }
 
   for (const recipient of recipientsToNotify) {
     if (recipient.user_id) {
-      await createNotification({
-        userId: recipient.user_id,
-        type: "signing_request",
-        title: `Permintaan tanda tangan: ${envelope.title}`,
-        body: `Dokumen ${envelope.title} menunggu tanda tangan Anda.`,
-        actionUrl: `/sign/${recipient.access_token}`
-      });
+      try {
+        await createNotification({
+          userId: recipient.user_id,
+          type: "signing_request",
+          title: `Permintaan tanda tangan: ${envelope.title}`,
+          body: `Dokumen ${envelope.title} menunggu tanda tangan Anda.`,
+          actionUrl: `/sign/${recipient.access_token}`
+        });
+      } catch {
+        // Best effort notification delivery.
+      }
     }
 
     try {
@@ -765,51 +875,98 @@ export async function sendEnvelope(senderId: string, envelopeId: string): Promis
     }
   }
 
-  await createAuditLog(envelopeId, senderId, "sent");
-
   return mapEnvelope(envelope);
 }
 
 export async function voidEnvelope(senderId: string, envelopeId: string): Promise<EnvelopeRecord> {
-  const ownershipEnvelope = await ensureEnvelopeOwnership(envelopeId, senderId);
+  const client = await pool.connect();
 
-  if (ownershipEnvelope.status === "completed") {
-    throw new ApiError(400, "Envelope yang sudah completed tidak dapat dibatalkan.");
+  try {
+    await client.query("BEGIN");
+
+    const envelopeResult = await client.query<DbEnvelopeRow>(
+      `
+        SELECT
+          id,
+          document_id,
+          sender_id,
+          title,
+          message,
+          status,
+          sequential_signing,
+          auto_reminder,
+          expires_at,
+          completed_at,
+          created_at
+        FROM envelopes
+        WHERE id = $1
+          AND sender_id = $2
+        LIMIT 1
+        FOR UPDATE
+      `,
+      [envelopeId, senderId]
+    );
+
+    const ownershipEnvelope = envelopeResult.rows[0];
+    if (!ownershipEnvelope) {
+      throw new ApiError(404, "Envelope tidak ditemukan.");
+    }
+
+    if (ownershipEnvelope.status === "completed") {
+      throw new ApiError(400, "Envelope yang sudah completed tidak dapat dibatalkan.");
+    }
+
+    if (ownershipEnvelope.status === "voided") {
+      throw new ApiError(400, "Envelope sudah dibatalkan sebelumnya.");
+    }
+
+    const updateResult = await client.query<DbEnvelopeRow>(
+      `
+        UPDATE envelopes
+        SET status = 'voided',
+            updated_at = NOW()
+        WHERE id = $1
+          AND sender_id = $2
+        RETURNING
+          id,
+          document_id,
+          sender_id,
+          title,
+          message,
+          status,
+          sequential_signing,
+          auto_reminder,
+          expires_at,
+          completed_at,
+          created_at
+      `,
+      [envelopeId, senderId]
+    );
+
+    const envelope = updateResult.rows[0];
+    if (!envelope) {
+      throw new ApiError(404, "Envelope tidak ditemukan.");
+    }
+
+    await client.query(
+      `
+        INSERT INTO audit_logs (envelope_id, user_id, action, metadata)
+        VALUES ($1, $2, 'voided', $3)
+      `,
+      [envelopeId, senderId, {}]
+    );
+
+    await syncDocumentWorkflowStatus(client, envelope.document_id);
+
+    await client.query("COMMIT");
+
+    return mapEnvelope(envelope);
+  } catch (error) {
+    await client.query("ROLLBACK");
+    throw error;
+  } finally {
+    client.release();
   }
-
-  if (ownershipEnvelope.status === "voided") {
-    throw new ApiError(400, "Envelope sudah dibatalkan sebelumnya.");
-  }
-
-  const result = await query<DbEnvelopeRow>(
-    `
-      UPDATE envelopes
-      SET status = 'voided'
-      WHERE id = $1 AND sender_id = $2
-      RETURNING
-        id,
-        document_id,
-        sender_id,
-        title,
-        message,
-        status,
-        sequential_signing,
-        auto_reminder,
-        expires_at,
-        completed_at,
-        created_at
-    `,
-    [envelopeId, senderId]
-  );
-
-  const envelope = result.rows[0];
-  if (!envelope) {
-    throw new ApiError(404, "Envelope tidak ditemukan.");
-  }
-
-  await createAuditLog(envelopeId, senderId, "voided");
-
-  return mapEnvelope(envelope);
 }
 
 export async function remindEnvelope(senderId: string, envelopeId: string): Promise<void> {
